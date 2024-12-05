@@ -37,13 +37,11 @@ function App() {
 
   return (
     <div className="App">
-    <div>Hello</div>
-      {isLoadingAfterLogin && <Loader />}
-      {!isLoadingAfterLogin && isAuthenticated ? (
-        <TransactionForm onLogout={handleLogout} token={token} />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
+      <div className="p-4">
+        <h1 className="text-3xl font-bold text-blue-500">
+          Hello Tailwind!
+        </h1>
+      </div>
     </div>
   );
 }
