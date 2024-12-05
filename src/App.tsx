@@ -4,6 +4,13 @@ import './App.css';
 import Login from './components/Login';
 import TransactionForm from './components/TransactionForm';
 import Loader from './components/Loader';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import SignupPage from './Pages/Signup';
+import LoginPage from './Pages/Login';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -36,11 +43,14 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className="p-4">
-        <h1 className="text-3xl font-bold text-blue-500">
-          Hello Tailwind!
-        </h1>
+      <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+       <BrowserRouter>
+          <Routes>
+              <Route path="/" element={<LoginPage/>} />
+              <Route path="/signup" element={<SignupPage/>} />
+          </Routes>
+        </BrowserRouter>
       </div>
     </div>
   );
