@@ -6,9 +6,9 @@ import TransactionForm from './components/TransactionForm';
 import Loader from './components/Loader';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState(null);
-  const [isLoadingAfterLogin, setIsLoadingAfterLogin] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoadingAfterLogin, setIsLoadingAfterLogin] = useState<boolean>(false);
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem('token');
@@ -18,7 +18,7 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (authToken) => {
+  const handleLogin = (authToken: string) => {
     setIsLoadingAfterLogin(true);
     setToken(authToken);
     sessionStorage.setItem('token', authToken);
@@ -37,6 +37,7 @@ function App() {
 
   return (
     <div className="App">
+    <div>Hello</div>
       {isLoadingAfterLogin && <Loader />}
       {!isLoadingAfterLogin && isAuthenticated ? (
         <TransactionForm onLogout={handleLogout} token={token} />

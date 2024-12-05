@@ -7,17 +7,21 @@ import { v4 as uuidv4 } from 'uuid';
 import lottie from 'lottie-web';
 import animation from '../assets/images/animation.json';
 
-const Login = ({ onLogin }) => {
-  const sdkRef = useRef(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalMessage, setModalMessage] = useState('');
+interface LoginProps {
+  onLogin: (token: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  const sdkRef = useRef<ResVaultSDK | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   if (!sdkRef.current) {
     sdkRef.current = new ResVaultSDK();
   }
 
-  const animationContainer = useRef(null);
+  const animationContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (animationContainer.current) {
@@ -54,29 +58,19 @@ const Login = ({ onLogin }) => {
     const sdk = sdkRef.current;
     if (!sdk) return;
 
-    const messageHandler = (event) => {
+    const messageHandler = (event: MessageEvent) => {
       const message = event.data;
 
-      if (
-        message &&
-        message.type === 'FROM_CONTENT_SCRIPT' &&
-        message.data &&
-        message.data.success !== undefined
-      ) {
-        if (message.data.success) {
-          const token = uuidv4();
-          sessionStorage.setItem('token', token);
-          onLogin(token);
-        }
-      } else if (
-        message &&
-        message.type === 'FROM_CONTENT_SCRIPT' &&
-        message.data &&
-        message.data === 'error'
-      ) {
+      if (message && message.type === 'FROM_CONTENT_SCRIPT' && message.data && message.data.success !== undefined) {
+          if (message.data.success) {
+            const token = uuidv4();
+            sessionStorage.setItem('token', token);
+            onLogin(token);
+          }
+      } else if (message && message.type === 'FROM_CONTENT_SCRIPT' && message.data && message.data === "error") {
         setModalTitle('Authentication Failed');
         setModalMessage(
-          'Please connect ResVault to this ResilientApp and try again.'
+          "Please connect ResVault to this ResilientApp and try again."
         );
         setShowModal(true);
       }
@@ -109,7 +103,7 @@ const Login = ({ onLogin }) => {
       <div className="page-container">
         <div className="form-container">
           <h2 className="heading">Resilient App</h2>
-
+          
           <div ref={animationContainer} className="animation-container"></div>
 
           <div className="form-group text-center mb-4">

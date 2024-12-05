@@ -3,15 +3,20 @@ import ResVaultSDK from 'resvault-sdk';
 import '../App.css';
 import NotificationModal from './NotificationModal';
 
-const TransactionForm = ({ onLogout, token }) => {
-  const [amount, setAmount] = useState('');
-  const [data, setData] = useState('');
-  const [recipient, setRecipient] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalMessage, setModalMessage] = useState('');
+interface TransactionFormProps {
+  onLogout: () => void;
+  token: string | null;
+}
 
-  const sdkRef = useRef(null);
+const TransactionForm: React.FC<TransactionFormProps> = ({ onLogout, token }) => {
+  const [amount, setAmount] = useState<string>('');
+  const [data, setData] = useState<string>('');
+  const [recipient, setRecipient] = useState<string>('');
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalMessage, setModalMessage] = useState<string>('');
+
+  const sdkRef = useRef<ResVaultSDK | null>(null);
 
   if (!sdkRef.current) {
     sdkRef.current = new ResVaultSDK();
@@ -21,24 +26,16 @@ const TransactionForm = ({ onLogout, token }) => {
     const sdk = sdkRef.current;
     if (!sdk) return;
 
-    const messageHandler = (event) => {
+    const messageHandler = (event: MessageEvent) => {
       const message = event.data;
 
-      if (
-        message &&
-        message.type === 'FROM_CONTENT_SCRIPT' &&
-        message.data &&
-        message.data.success !== undefined
-      ) {
+      if (message && message.type === 'FROM_CONTENT_SCRIPT' && message.data && message.data.success !== undefined) {
         if (message.data.success) {
           setModalTitle('Success');
           setModalMessage('Transaction successful! ID: ' + message.data.data.postTransaction.id);
         } else {
           setModalTitle('Transaction Failed');
-          setModalMessage(
-            'Transaction failed: ' +
-              (message.data.error || JSON.stringify(message.data.errors))
-          );
+          setModalMessage('Transaction failed: ' + (message.data.error || JSON.stringify(message.data.errors)));
         }
         setShowModal(true);
       }
@@ -51,7 +48,7 @@ const TransactionForm = ({ onLogout, token }) => {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!recipient) {
@@ -67,9 +64,7 @@ const TransactionForm = ({ onLogout, token }) => {
         parsedData = JSON.parse(data);
       } catch (error) {
         setModalTitle('Validation Error');
-        setModalMessage(
-          'Invalid JSON format in the data field. Please check and try again.'
-        );
+        setModalMessage('Invalid JSON format in the data field. Please check and try again.');
         setShowModal(true);
         return;
       }
@@ -90,7 +85,7 @@ const TransactionForm = ({ onLogout, token }) => {
     }
   };
 
-  const handleLogoutClick = () => {
+  const handleLogout = () => {
     onLogout();
   };
 
@@ -102,11 +97,7 @@ const TransactionForm = ({ onLogout, token }) => {
         <div className="form-container">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h2 className="heading">Submit Transaction</h2>
-            <button
-              type="button"
-              className="btn btn-danger logout-button"
-              onClick={handleLogoutClick}
-            >
+            <button type="button" className="btn btn-danger logout-button" onClick={handleLogout}>
               Logout
             </button>
           </div>
