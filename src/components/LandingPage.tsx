@@ -4,12 +4,17 @@ import NavItem from './NavItem';
 import StatCard from './StatCard';
 import ActivityItem from './ActivityItem';
 import GroupItem from './GroupItem';
+import AddExpense from './AddExpense'; // Import the AddExpense component
 
 const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userName, setUserName] = useState<string | undefined>();
+  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false); // State to control the modal visibility
+
+  const closeAddExpenseModal = () => setIsAddExpenseOpen(false); // Close modal function
+  const openAddExpenseModal = () => setIsAddExpenseOpen(true); // Open modal function
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
@@ -43,7 +48,6 @@ const LandingPage: React.FC = () => {
         z-50
         p-4
       `}>
-        {/* Desktop Logo - Hidden on Mobile */}
         <div className="hidden lg:flex items-center mb-12">
           <div className="h-10 w-10 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
             <span className="text-xl font-bold text-white">S</span>
@@ -59,7 +63,6 @@ const LandingPage: React.FC = () => {
           <NavItem icon={<Settings size={20} />} label="Account" isExpanded={isExpanded} />
         </div>
 
-        {/* Desktop Toggle - Hidden on Mobile */}
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
@@ -70,7 +73,6 @@ const LandingPage: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-4 lg:p-8 pt-4 overflow-y-auto">
-        {/* Top Bar */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
           <div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">Dashboard</h2>
@@ -83,7 +85,10 @@ const LandingPage: React.FC = () => {
             <button className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
               <Bell className="h-5 w-5 text-gray-600" />
             </button>
-            <button className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+            <button 
+              onClick={openAddExpenseModal} // Open the modal on button click
+              className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            >
               <Plus className="h-5 w-5" />
               <span>Add Expense</span>
             </button>
@@ -163,6 +168,15 @@ const LandingPage: React.FC = () => {
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         />
+      )}
+
+      {/* Add Expense Modal */}
+      {isAddExpenseOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-8 w-96">
+            <AddExpense onClose={closeAddExpenseModal} />
+          </div>
+        </div>
       )}
     </div>
   );
