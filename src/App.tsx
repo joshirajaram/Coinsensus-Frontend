@@ -17,7 +17,7 @@ import Groups from '../src/components/Groups';
 import { LayoutDashboard, Home, StickyNote, Layers, Flag, Calendar, LifeBuoy, Settings } from "lucide-react";
 import Sidebar, { SidebarItem } from "./components/Sidebar"
 import Friends from '../src/components/Friends';
-
+import Activity from '../src/components/Activity';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -51,7 +51,7 @@ function App() {
 
   return (
     <div>
-      {true
+      {false
         &&
       <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
@@ -73,15 +73,11 @@ function App() {
         <div>
           <div className="flex">
           <Sidebar>
-            <SidebarItem icon={<Home size={20} />} text="Home" alert active={true} />
-            <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" active={true} alert={undefined} />
-            <SidebarItem icon={<StickyNote size={20} />} text="Projects" alert active={undefined} />
-            <SidebarItem icon={<Calendar size={20} />} text="Calendar" active={undefined} alert={undefined} />
-            <SidebarItem icon={<Layers size={20} />} text="Tasks" active={undefined} alert={undefined} />
-            <SidebarItem icon={<Flag size={20} />} text="Reporting" active={undefined} alert={undefined} />
+            <SidebarItem icon={<Layers size={20} />} text="Groups" active={true} alert={undefined} />
+            <SidebarItem icon={<Flag size={20} />} text="Friends" active={undefined} alert={undefined} />
+            <SidebarItem icon={<Calendar size={20} />} text="Activity" active={undefined} alert={undefined} />
             <hr className="my-3" />
-            <SidebarItem icon={<Settings size={20} />} text="Settings" active={undefined} alert={undefined} />
-            <SidebarItem icon={<LifeBuoy size={20} />} text="Help" active={undefined} alert={undefined} />
+            <SidebarItem icon={<Settings size={20} />} text="Account" active={undefined} alert={undefined} />
           </Sidebar>
       </div>
           <BrowserRouter>
