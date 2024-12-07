@@ -48,7 +48,7 @@ const LandingPage: React.FC = () => {
           <div className="h-10 w-10 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
             <span className="text-xl font-bold text-white">S</span>
           </div>
-          {isExpanded && <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Splitwise</h1>}
+          {isExpanded && <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Coinsensus</h1>}
         </div>
         
         <div className="space-y-2">
