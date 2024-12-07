@@ -51,7 +51,6 @@ function App() {
 
   return (
     <div>
-      // login and signup logic
       {false
         &&
       <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -65,7 +64,6 @@ function App() {
         </div>
       </div>
       }
-      // page route logics
       {true
         &&
         <div>
@@ -83,7 +81,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/groups" element={<Groups />} />
               <Route path="/friends" element={<Friends />} />
-              <Route path="/groups" element={<Groups />} />
+              <Route path="/activity" element={<Groups />} />
               <Route path="/account" element={<Account />} />
             </Routes>
           </BrowserRouter>
