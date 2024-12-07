@@ -6,11 +6,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Select,
-  MenuItem,
   Chip,
   Box,
 } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import GroupItem from 'components/GroupItem';
 
 interface Group {
@@ -29,7 +28,7 @@ const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupName, setGroupName] = useState('');
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<Friend[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
 
   // Simulate fetching groups
@@ -83,8 +82,14 @@ const GroupsPage: React.FC = () => {
           <h3 className="text-xl font-semibold">Active Groups</h3>
           <Button
             variant="contained"
-            color="primary"
             onClick={() => setIsModalOpen(true)}
+            sx={{
+              background: 'linear-gradient(to right, #9C27B0, #673AB7)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(to right, #7B1FA2, #5E35B1)',
+              },
+            }}
           >
             New Group
           </Button>
@@ -114,35 +119,49 @@ const GroupsPage: React.FC = () => {
           />
           <Box sx={{ marginTop: 2 }}>
             <label>Select Members:</label>
-            <Select
+            <Autocomplete
               multiple
+              options={friends}
+              getOptionLabel={(friend) => friend.name}
               value={selectedMembers}
-              onChange={(e) => setSelectedMembers(e.target.value as string[])}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
+              onChange={(_, newValue) => setSelectedMembers(newValue)}
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" placeholder="Search friends" />
               )}
-              fullWidth
-            >
-              {friends.map((friend) => (
-                <MenuItem key={friend.id} value={friend.name}>
-                  {friend.name}
-                </MenuItem>
-              ))}
-            </Select>
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    label={option.name}
+                    {...getTagProps({ index })} // Already includes the key property
+                  />
+                ))
+              }              
+            />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsModalOpen(false)} color="secondary">
+          <Button
+            onClick={() => setIsModalOpen(false)}
+            sx={{
+              background: 'linear-gradient(to right, #9C27B0, #673AB7)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(to right, #7B1FA2, #5E35B1)',
+              },
+            }}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleCreateGroup}
             variant="contained"
-            color="primary"
+            sx={{
+              background: 'linear-gradient(to right, #9C27B0, #673AB7)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(to right, #7B1FA2, #5E35B1)',
+              },
+            }}
             disabled={!groupName.trim() || selectedMembers.length === 0}
           >
             Create Group
