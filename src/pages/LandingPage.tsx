@@ -5,16 +5,30 @@ import StatCard from '../components/StatCard';
 import ActivityItem from '../components/ActivityItem';
 import GroupItem from '../components/GroupItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
+import { Outlet, useLocation } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [userName, setUserName] = useState<string | undefined>();
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false); // State to control the modal visibility
+  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
+  const location = useLocation();
 
-  const closeAddExpenseModal = () => setIsAddExpenseOpen(false); // Close modal function
-  const openAddExpenseModal = () => setIsAddExpenseOpen(true); // Open modal function
+  // Get page title based on current route
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/': return 'Dashboard';
+      case '/groups': return 'Groups';
+      case '/friends': return 'Friends';
+      case '/activity': return 'Activity';
+      case '/account': return 'Account';
+      default: return 'Dashboard';
+    }
+  };
+  const closeAddExpenseModal = () => setIsAddExpenseOpen(false);
+  const openAddExpenseModal = () => setIsAddExpenseOpen(true);
+
+  const [userName, setUserName] = useState<string | undefined>();
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
@@ -56,13 +70,37 @@ const LandingPage: React.FC = () => {
         </div>
         
         <div className="space-y-2">
-          <NavItem icon={<Home size={20} />} label="Home" active isExpanded={isExpanded} />
-          <NavItem icon={<Users size={20} />} label="Groups" isExpanded={isExpanded} />
-          <NavItem icon={<UserPlus size={20} />} label="Friends" isExpanded={isExpanded} />
-          <NavItem icon={<Activity size={20} />} label="Activity" isExpanded={isExpanded} />
-          <NavItem icon={<Settings size={20} />} label="Account" isExpanded={isExpanded} />
+          <NavItem 
+            icon={<Home size={20} />} 
+            label="Home" 
+            path="/" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Users size={20} />} 
+            label="Groups" 
+            path="/groups" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<UserPlus size={20} />} 
+            label="Friends" 
+            path="/friends" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Activity size={20} />} 
+            label="Activity" 
+            path="/activity" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Settings size={20} />} 
+            label="Account" 
+            path="/account" 
+            isExpanded={isExpanded} 
+          />
         </div>
-
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
@@ -71,12 +109,11 @@ const LandingPage: React.FC = () => {
         </button>
       </nav>
 
-      {/* Main Content */}
       <main className="flex-1 p-4 lg:p-8 pt-4 overflow-y-auto">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
           <div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">Dashboard</h2>
-            <p className="text-gray-500 mt-1">Welcome back, {userName}!</p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">{getPageTitle()}</h2>
+            <p className="text-gray-500 mt-1">Welcome back!</p>
           </div>
           <div className="flex items-center space-x-4">
             <button className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -86,7 +123,7 @@ const LandingPage: React.FC = () => {
               <Bell className="h-5 w-5 text-gray-600" />
             </button>
             <button 
-              onClick={openAddExpenseModal} // Open the modal on button click
+              onClick={() => setIsAddExpenseOpen(true)}
               className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
             >
               <Plus className="h-5 w-5" />
@@ -94,74 +131,18 @@ const LandingPage: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
-          <StatCard 
-            icon={<TrendingUp size={20} />}
-            title="You are owed" 
-            amount="$1,240.50" 
-            trend="up"
-            trendValue="12.5%"
-          />
-          <StatCard 
-            icon={<CreditCard size={20} />}
-            title="You owe" 
-            amount="$380.20" 
-            trend="down"
-            trendValue="5.2%"
-          />
-          <StatCard 
-            icon={<Users size={20} />}
-            title="Active Groups" 
-            amount="8" 
-            trend="up"
-            trendValue="2"
-          />
-        </div>
-
-        {/* Activity and Groups Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
-          {/* Recent Activity */}
-          <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
-            <div className="space-y-4">
-              <ActivityItem 
-                title="Grocery Shopping"
-                amount={85.20}
-                group="Roommates"
-                time="2h ago"
-                users={4}
-              />
-              <ActivityItem 
-                title="Netflix"
-                amount={15.99}
-                group="Family"
-                time="5h ago"
-                users={3}
-              />
-              <ActivityItem 
-                title="Dinner"
-                amount={125.50}
-                group="Friends"
-                time="1d ago"
-                users={5}
-              />
-            </div>
-          </div>
-
-          {/* Groups Overview */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="text-xl font-semibold mb-6">Active Groups</h3>
-            <div className="space-y-4">
-              <GroupItem name="Roommates" members={4} balance={320.50} />
-              <GroupItem name="Trip to Vegas" members={6} balance={-45.20} />
-              <GroupItem name="Family" members={3} balance={0} />
-            </div>
-          </div>
-        </div>
+        <Outlet />
       </main>
 
+
+       {/* Add Expense Modal */}
+       {isAddExpenseOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-8 w-96">
+            <AddExpense onClose={closeAddExpenseModal} />
+          </div>
+        </div>
+      )}
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
@@ -170,14 +151,7 @@ const LandingPage: React.FC = () => {
         />
       )}
 
-      {/* Add Expense Modal */}
-      {isAddExpenseOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white rounded-xl p-8 w-96">
-            <AddExpense onClose={closeAddExpenseModal} />
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };

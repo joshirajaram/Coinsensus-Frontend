@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
+// src/App.tsx
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import AddExpense from './components/AddExpense';
+import GroupsPage from './pages/GroupsPage';
+import FriendsPage from './pages/FriendsPage';
+import ActivityPage from './pages/ActivityPage';
+import AccountPage from './pages/AccountPage';
+import HomePage from './pages/HomePage';
 
 const App: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/addexpense"
-          element={isModalOpen ? <AddExpense onClose={handleCloseModal} /> : null}
-        />
+        <Route path="/" element={<LandingPage />}>
+          <Route index element={<HomePage />} />
+          <Route path="groups" element={<GroupsPage />} />
+          <Route path="friends" element={<FriendsPage />} />
+          <Route path="activity" element={<ActivityPage />} />
+          <Route path="account" element={<AccountPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
