@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Home, Users, UserPlus, Activity, Settings, Plus, Bell, Search, TrendingUp, CreditCard, Menu, X } from 'lucide-react';
-import NavItem from './NavItem';
-import StatCard from './StatCard';
-import ActivityItem from './ActivityItem';
-import GroupItem from './GroupItem';
-import AddExpense from './AddExpense'; // Import the AddExpense component
+import NavItem from '../components/NavItem';
+import StatCard from '../components/StatCard';
+import ActivityItem from '../components/ActivityItem';
+import GroupItem from '../components/GroupItem';
+import AddExpense from '../components/AddExpense'; // Import the AddExpense component
 
 const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
