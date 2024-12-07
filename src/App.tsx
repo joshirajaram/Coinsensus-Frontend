@@ -70,8 +70,8 @@ function App() {
           <div className="flex">
           <Sidebar>
             <SidebarItem icon={<Layers size={20} />} text="Groups" active={true} alert={undefined} />
-            <SidebarItem icon={<Flag size={20} />} text="Friends" active={undefined} alert={undefined} />
-            <SidebarItem icon={<Calendar size={20} />} text="Activity" active={undefined} alert={undefined} />
+            <SidebarItem icon={<LifeBuoy size={20} />} text="Friends" active={undefined} alert={undefined} />
+            <SidebarItem icon={<StickyNote size={20} />} text="Activity" alert active={undefined} />
             <hr className="my-3" />
             <SidebarItem icon={<Settings size={20} />} text="Account" active={undefined} alert={undefined} />
           </Sidebar>
