@@ -12,7 +12,7 @@ import AddExpense from 'components/AddExpense';
 
 const App: React.FC = () => {
   // State to manage whether to show landing page or auth component
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
