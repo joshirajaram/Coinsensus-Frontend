@@ -18,12 +18,10 @@ import { Plus } from 'lucide-react';
 
 // Define the types for the contributions and users
 interface Contribution {
-    user: string;
-    amount: string;
-  }
-  
+  user: string;
+  amount: string;
+}
 
-// Define the props interface to receive `onClose` from the parent component
 interface AddExpenseProps {
   onClose: () => void;
 }
@@ -68,136 +66,105 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
       selectedUsers,
       customContributions,
     });
-    onClose(); // Close the modal after the expense is added
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 3,
-        padding: 4,
-        maxWidth: '600px',
-        margin: 'auto',
-        backgroundColor: 'background.paper',
-        borderRadius: 2,
-        boxShadow: 3,
-      }}
-    >
-      <Typography variant="h5">Add Expense</Typography>
-
-      {/* User Selection */}
-      <Box sx={{ width: '100%' }}>
-        <Typography>With you and:</Typography>
-        <Select
-          multiple
-          value={selectedUsers}
-          onChange={(event) => setSelectedUsers(event.target.value as string[])}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          fullWidth
-        >
-          {allUsers.map((user) => (
-            <MenuItem key={user} value={user}>
-              {user}
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
-
-      {/* Description and Amount */}
-      <TextField label="Enter a Description" fullWidth />
-      <TextField label="Enter Amount" type="number" fullWidth />
-
-      {/* Expense Type */}
-      <Typography>Expense Type</Typography>
-      <ToggleButtonGroup
-        value={expenseType}
-        exclusive
-        onChange={handleExpenseTypeChange}
-        sx={{ width: '100%' }}
-      >
-        <ToggleButton value="individual">Individual</ToggleButton>
-        <ToggleButton value="group">Group</ToggleButton>
-      </ToggleButtonGroup>
-
-      {/* Split Method */}
-      <Typography>Split Method</Typography>
-      <ToggleButtonGroup
-        value={splitMethod}
-        exclusive
-        onChange={handleSplitMethodChange}
-        sx={{ width: '100%' }}
-      >
-        <ToggleButton value="equal">Equally</ToggleButton>
-        <ToggleButton value="custom">Custom</ToggleButton>
-      </ToggleButtonGroup>
-
-      {/* Add Expense Button */}
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={handleAddExpense}
-        sx={{
-          backgroundColor: '#9C27B0', // Purple
-          '&:hover': {
-            backgroundColor: '#7B1FA2', // Darker purple on hover
-          },
-        }}
-      >
-        <Plus /> Add Expense
-      </Button>
-
-      {/* Custom Split Dialog */}
-      <Dialog
-        open={showCustomSplitDialog}
-        onClose={() => setShowCustomSplitDialog(false)}
-      >
-        <DialogTitle>Custom Contributions</DialogTitle>
-        <DialogContent>
-          {customContributions.map((contribution, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: 'flex',
-                gap: 2,
-                alignItems: 'center',
-                marginBottom: 2,
-              }}
-            >
-              <Typography>{contribution.user}:</Typography>
-              <TextField
-                label="Amount"
-                type="number"
-                value={contribution.amount}
-                onChange={(e) => {
-                  const updatedContributions = [...customContributions];
-                  updatedContributions[index].amount = e.target.value;
-                  setCustomContributions(updatedContributions);
-                }}
-              />
-            </Box>
-          ))}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowCustomSplitDialog(false)}>Cancel</Button>
-          <Button
-            onClick={() => setShowCustomSplitDialog(false)}
-            variant="contained"
-          >
-            Save
+    <Dialog open={true} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>
+        <div className="flex justify-between">
+          <Typography variant="h6">Add New Expense</Typography>
+          <Button onClick={onClose} color="secondary">
+            Close
           </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        </div>
+      </DialogTitle>
+      <DialogContent>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 3,
+            padding: 4,
+            maxWidth: '800px',  // Increase the maximum width
+            margin: 'auto',
+            backgroundColor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          <Typography variant="h5">Add Expense</Typography>
+
+          {/* User Selection */}
+          <Box sx={{ width: '100%' }}>
+            <Typography>With you and:</Typography>
+            <Select
+              multiple
+              value={selectedUsers}
+              onChange={(event) => setSelectedUsers(event.target.value as string[])}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              fullWidth
+            >
+              {allUsers.map((user) => (
+                <MenuItem key={user} value={user}>
+                  {user}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          {/* Description and Amount */}
+          <TextField label="Enter a Description" fullWidth />
+          <TextField label="Enter Amount" type="number" fullWidth />
+
+          {/* Expense Type */}
+          <Typography>Expense Type</Typography>
+          <ToggleButtonGroup
+            value={expenseType}
+            exclusive
+            onChange={handleExpenseTypeChange}
+            sx={{ width: '100%' }}
+          >
+            <ToggleButton value="individual">Individual</ToggleButton>
+            <ToggleButton value="group">Group</ToggleButton>
+          </ToggleButtonGroup>
+
+          {/* Split Method */}
+          <Typography>Split Method</Typography>
+          <ToggleButtonGroup
+            value={splitMethod}
+            exclusive
+            onChange={handleSplitMethodChange}
+            sx={{ width: '100%' }}
+          >
+            <ToggleButton value="equal">Equally</ToggleButton>
+            <ToggleButton value="custom">Custom</ToggleButton>
+          </ToggleButtonGroup>
+
+          {/* Add Expense Button */}
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleAddExpense}
+            sx={{
+              backgroundColor: '#9C27B0', // Purple
+              '&:hover': {
+                backgroundColor: '#7B1FA2', // Darker purple on hover
+              },
+            }}
+          >
+            <Plus /> Add Expense
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 
