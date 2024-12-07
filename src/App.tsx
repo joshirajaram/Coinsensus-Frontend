@@ -11,10 +11,13 @@ import {
 } from "react-router-dom";
 import SignupPage from './Pages/Signup';
 import LoginPage from './Pages/Login';
-import Home from '../src/components/Home';
+import HomePage from '../src/components/Home';
 import Account from '../src/components/Account';
 import Groups from '../src/components/Groups';
+import { LayoutDashboard, Home, StickyNote, Layers, Flag, Calendar, LifeBuoy, Settings } from "lucide-react";
+import Sidebar, { SidebarItem } from "./components/Sidebar"
 import Friends from '../src/components/Friends';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -48,7 +51,7 @@ function App() {
 
   return (
     <div>
-      {false
+      {true
         &&
       <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
@@ -67,14 +70,29 @@ function App() {
       }
       {true
         &&
+        <div>
+          <div className="flex">
+          <Sidebar>
+            <SidebarItem icon={<Home size={20} />} text="Home" alert active={true} />
+            <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" active={true} alert={undefined} />
+            <SidebarItem icon={<StickyNote size={20} />} text="Projects" alert active={undefined} />
+            <SidebarItem icon={<Calendar size={20} />} text="Calendar" active={undefined} alert={undefined} />
+            <SidebarItem icon={<Layers size={20} />} text="Tasks" active={undefined} alert={undefined} />
+            <SidebarItem icon={<Flag size={20} />} text="Reporting" active={undefined} alert={undefined} />
+            <hr className="my-3" />
+            <SidebarItem icon={<Settings size={20} />} text="Settings" active={undefined} alert={undefined} />
+            <SidebarItem icon={<LifeBuoy size={20} />} text="Help" active={undefined} alert={undefined} />
+          </Sidebar>
+      </div>
           <BrowserRouter>
             <Routes>
-              <Route path="/home" element={<Home />} />
+              <Route path="/home" element={<HomePage />} />
               <Route path="/groups" element={<Groups />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/account" element={<Account />} />
             </Routes>
           </BrowserRouter>
+        </div>
       }
     </div>
   );
