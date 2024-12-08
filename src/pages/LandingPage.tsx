@@ -112,14 +112,39 @@ const LandingPage: React.FC = () => {
             </h1>
           )}
         </div>
-
-        <div className="space-y-2">
-          <NavItem icon={<Home size={20} />} label="Home" path="/" isExpanded={isExpanded} />
-          <NavItem icon={<Users size={20} />} label="Groups" path="/groups" isExpanded={isExpanded} />
-          <NavItem icon={<UserPlus size={20} />} label="Friends" path="/friends" isExpanded={isExpanded} />
-          <NavItem icon={<Activity size={20} />} label="Activity" path="/activity" isExpanded={isExpanded} />
-          <NavItem icon={<Settings size={20} />} label="Account" path="/account" isExpanded={isExpanded} />
-        </div>
+        
+        <div className="space-y-2 h-screen">
+          <NavItem 
+            icon={<Home size={20} />} 
+            label="Home" 
+            path="/" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Users size={20} />} 
+            label="Groups" 
+            path="/groups" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<UserPlus size={20} />} 
+            label="Friends" 
+            path="/friends" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Activity size={20} />} 
+            label="Activity" 
+            path="/activity" 
+            isExpanded={isExpanded} 
+          />
+          <NavItem 
+            icon={<Settings size={20} />} 
+            label="Account" 
+            path="/account" 
+            isExpanded={isExpanded} 
+          />
+</div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
