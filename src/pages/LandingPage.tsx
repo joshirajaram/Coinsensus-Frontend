@@ -1,34 +1,72 @@
 import React, { useState } from 'react';
-import { Home, Users, UserPlus, Activity, Settings, Plus, Bell, Search, TrendingUp, CreditCard, Menu, X } from 'lucide-react';
+import {
+  Home,
+  Users,
+  UserPlus,
+  Activity,
+  Settings,
+  Plus,
+  TrendingUp,
+  Menu,
+  X,
+} from 'lucide-react';
 import NavItem from '../components/NavItem';
-import StatCard from '../components/StatCard';
-import ActivityItem from '../components/ActivityItem';
-import GroupItem from '../components/GroupItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
 import { Outlet, useLocation } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
+  const [isSettleTransactionsOpen, setIsSettleTransactionsOpen] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<{ name: string; amount: number } | null>(null);
+
+  // State for balances
+  
+  const [balances, setBalances] = useState([
+    { name: 'Alice', amount: -25.0 , email: 'abc.gmail.com'}, // You owe Alice
+    { name: 'Bob', amount: 50.0 , email: 'abc.gmail.com'},   // Bob owes you
+    { name: 'Charlie', amount: -10.0 , email: 'abc.gmail.com'}, // You owe Charlie
+    { name: 'Vijeth', amount: 0.0 , email: 'abc.gmail.com'}, // You owe Charlie
+  ]);
+
   const location = useLocation();
 
-  // Get page title based on current route
+  // Filter non-zero balances
+  const nonZeroBalances = balances.filter((balance) => balance.amount !== 0);
+
   const getPageTitle = () => {
     switch (location.pathname) {
-      case '/': return 'Dashboard';
-      case '/groups': return 'Groups';
-      case '/friends': return 'Friends';
-      case '/activity': return 'Activity';
-      case '/account': return 'Account';
-      default: return 'Dashboard';
+      case '/':
+        return 'Dashboard';
+      case '/groups':
+        return 'Groups';
+      case '/friends':
+        return 'Friends';
+      case '/activity':
+        return 'Activity';
+      case '/account':
+        return 'Account';
+      default:
+        return 'Dashboard';
     }
   };
+
   const closeAddExpenseModal = () => setIsAddExpenseOpen(false);
   const openAddExpenseModal = () => setIsAddExpenseOpen(true);
 
-  const [userName, setUserName] = useState<string | undefined>();
+  const closeSettleTransactionsModal = () => setIsSettleTransactionsOpen(false);
+  const openSettleTransactionsModal = () => setIsSettleTransactionsOpen(true);
+
+  const confirmSettlement = () => {
+    if (selectedUser) {
+      // Remove the settled user from the balances
+      setBalances((prevBalances) =>
+        prevBalances.filter((balance) => balance.name !== selectedUser.name)
+      );
+      setSelectedUser(null); // Close the confirmation dialog
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
@@ -42,7 +80,7 @@ const LandingPage: React.FC = () => {
             Coinsensus
           </h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 hover:bg-gray-100 rounded-lg"
         >
@@ -51,7 +89,8 @@ const LandingPage: React.FC = () => {
       </div>
 
       {/* Responsive Navigation */}
-      <nav className={`
+      <nav
+        className={`
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0
         ${isExpanded ? 'lg:w-64' : 'lg:w-20'}
@@ -61,47 +100,27 @@ const LandingPage: React.FC = () => {
         transition-all duration-300
         z-50
         p-4
-      `}>
+      `}
+      >
         <div className="hidden lg:flex items-center mb-12">
           <div className="h-10 w-10 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
             <span className="text-xl font-bold text-white">S</span>
           </div>
-          {isExpanded && <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Coinsensus</h1>}
+          {isExpanded && (
+            <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              Coinsensus
+            </h1>
+          )}
         </div>
-        
+
         <div className="space-y-2">
-          <NavItem 
-            icon={<Home size={20} />} 
-            label="Home" 
-            path="/" 
-            isExpanded={isExpanded} 
-          />
-          <NavItem 
-            icon={<Users size={20} />} 
-            label="Groups" 
-            path="/groups" 
-            isExpanded={isExpanded} 
-          />
-          <NavItem 
-            icon={<UserPlus size={20} />} 
-            label="Friends" 
-            path="/friends" 
-            isExpanded={isExpanded} 
-          />
-          <NavItem 
-            icon={<Activity size={20} />} 
-            label="Activity" 
-            path="/activity" 
-            isExpanded={isExpanded} 
-          />
-          <NavItem 
-            icon={<Settings size={20} />} 
-            label="Account" 
-            path="/account" 
-            isExpanded={isExpanded} 
-          />
+          <NavItem icon={<Home size={20} />} label="Home" path="/" isExpanded={isExpanded} />
+          <NavItem icon={<Users size={20} />} label="Groups" path="/groups" isExpanded={isExpanded} />
+          <NavItem icon={<UserPlus size={20} />} label="Friends" path="/friends" isExpanded={isExpanded} />
+          <NavItem icon={<Activity size={20} />} label="Activity" path="/activity" isExpanded={isExpanded} />
+          <NavItem icon={<Settings size={20} />} label="Account" path="/account" isExpanded={isExpanded} />
         </div>
-        <button 
+        <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
         >
@@ -109,21 +128,23 @@ const LandingPage: React.FC = () => {
         </button>
       </nav>
 
+      {/* Main Content */}
       <main className="flex-1 p-4 lg:p-8 pt-4 overflow-y-auto">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
           <div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">{getPageTitle()}</h2>
             <p className="text-gray-500 mt-1">Welcome back!</p>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
-              <Search className="h-5 w-5 text-gray-600" />
+            <button
+              onClick={openSettleTransactionsModal}
+              className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <TrendingUp className="h-5 w-5" />
+              <span>Settle Transactions</span>
             </button>
-            <button className="p-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow">
-              <Bell className="h-5 w-5 text-gray-600" />
-            </button>
-            <button 
-              onClick={() => setIsAddExpenseOpen(true)}
+            <button
+              onClick={openAddExpenseModal}
               className="flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
             >
               <Plus className="h-5 w-5" />
@@ -134,24 +155,72 @@ const LandingPage: React.FC = () => {
         <Outlet />
       </main>
 
-
-       {/* Add Expense Modal */}
-       {isAddExpenseOpen && (
+      {/* Add Expense Modal */}
+      {isAddExpenseOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
           <div className="bg-white rounded-xl p-8 w-96">
             <AddExpense onClose={closeAddExpenseModal} />
           </div>
         </div>
       )}
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
+
+      {/* Settle Transactions Modal */}
+      {isSettleTransactionsOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div className="bg-white rounded-xl p-8 w-96">
+      <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
+      {nonZeroBalances.length > 0 ? (
+        <ul className="space-y-4">
+          {nonZeroBalances.map((balance) => (
+            <li
+              key={balance.name}
+              className={`flex justify-between p-2 rounded-lg cursor-pointer ${
+                balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}
+              onClick={() => setSelectedUser(balance)}
+            >
+              <span>{balance.name}</span>
+              <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center text-gray-500">Nothing to settle</p>
       )}
+      <button
+        onClick={closeSettleTransactionsModal}
+        className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
 
-
+      {/* Confirm Settlement Dialog */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-6 w-96">
+            <p className="text-gray-800 text-center">
+              Are you sure you want to settle the balance with <strong>{selectedUser.name}</strong>?
+            </p>
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmSettlement}
+                className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

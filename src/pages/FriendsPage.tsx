@@ -68,6 +68,13 @@ const FriendsPage: React.FC = () => {
             variant="contained"
             color="primary"
             onClick={() => setIsModalOpen(true)}
+            sx={{
+              background: 'linear-gradient(to right, #9C27B0, #673AB7)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(to right, #7B1FA2, #5E35B1)',
+              },
+            }}
           >
             Add Friend
           </Button>
@@ -109,7 +116,13 @@ const FriendsPage: React.FC = () => {
           <Button onClick={() => setIsModalOpen(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleAddFriend} variant="contained" color="primary">
+          <Button onClick={handleAddFriend} variant="contained" color="primary" sx={{
+              background: 'linear-gradient(to right, #9C27B0, #673AB7)',
+              color: '#fff',
+              '&:hover': {
+                background: 'linear-gradient(to right, #7B1FA2, #5E35B1)',
+              },
+            }}>
             Add Friend
           </Button>
         </DialogActions>
