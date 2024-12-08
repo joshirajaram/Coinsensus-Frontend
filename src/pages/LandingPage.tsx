@@ -69,7 +69,7 @@ const LandingPage: React.FC = () => {
           {isExpanded && <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Coinsensus</h1>}
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2 h-screen">
           <NavItem 
             icon={<Home size={20} />} 
             label="Home" 
