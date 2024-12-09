@@ -31,7 +31,7 @@ const FriendsPage: React.FC = () => {
     const getFriends = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/users/getUser?username=${username}`,
+          `http://localhost:8080/api/users/getFriends?username=${username}`,
           {
             headers: {
               'Content-Type': 'application/json'
@@ -66,19 +66,6 @@ const FriendsPage: React.FC = () => {
     }
   }, [username]); // Dependency on username
   
-  useEffect(() => {
-    // Mock data to simulate an API response
-    const mockData: Friend[] = [
-      { id: 1, name: 'Alice Johnson', email: 'alice@example.com', mutualGroups: 3, profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799' },
-      { id: 2, name: 'Bob Smith', email: 'bob@example.com', mutualGroups: 5, profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799' },
-      { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', mutualGroups: 2, profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799' },
-      { id: 4, name: 'Diana Prince', email: 'diana@example.com', mutualGroups: 4, profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799' },
-    ];
-
-    // Simulate API fetch and update state
-    setFriends(mockData);
-  }, []);
-
   const handleAddFriend = async () => {
     if (newFriend.trim()) {
       try {
