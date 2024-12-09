@@ -15,6 +15,8 @@ import NavItem from '../components/NavItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
 import { Outlet, useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
+import DollarIcon from '../assets/images/dollar.png';
+
 
 
 interface LandingPageProps {
@@ -80,9 +82,14 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center space-x-3">
-          <div className="h-8 w-8 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
-            <span className="text-lg font-bold text-white">S</span>
-          </div>
+          <div className="h-8 w-8 flex items-center justify-center">
+          <img
+            src={DollarIcon} // Replace with the actual path to your favicon
+            alt="Logo"
+            className="h-full w-full object-contain"
+          />
+        </div>
+
           <Link to="/">
             <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
               &nbsp; Coinsensus
@@ -112,9 +119,14 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       `}
       >
         <div className="hidden lg:flex items-center mb-12">
-          <div className="h-10 w-10 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
-            <span className="text-xl font-bold text-white">S</span>
-          </div>
+        <div className="h-10 w-10 flex items-center justify-center">
+        <img
+          src={DollarIcon}
+          alt="Logo"
+          className="h-full w-full object-contain"
+        />
+      </div>
+
           {isExpanded && (
             <Link to="/">
             <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
