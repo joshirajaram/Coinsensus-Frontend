@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import DollarIcon from '../../assets/images/dollar.png';
 
 export default function Header({
     heading,
@@ -12,7 +13,7 @@ export default function Header({
                 <img 
                     alt=""
                     height="100px" width="100px"
-                    src="https://img.icons8.com/?size=100&id=42217&fiormat=png&color=575799"/>
+                    src={DollarIcon}/>
             </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 {heading}

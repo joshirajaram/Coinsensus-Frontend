@@ -29,7 +29,7 @@ export default function Login({ onAuthenticate }) {
                 if (response.data.success === true) {
                     localStorage.setItem('username', loginState.username);
                     onAuthenticate();
-                    alert(`Welcome back, ${loginState.username}!`);
+                    // alert(`Welcome back, ${loginState.username}!`);
                 } else {
                     alert('Invalid password. Please try again.');
                 }
