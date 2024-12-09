@@ -16,6 +16,7 @@ import {
   SelectChangeEvent
 } from '@mui/material';
 import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 
 interface SplitAmount {
@@ -47,7 +48,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
   const [amount, setAmount] = useState<number | ''>('');
   const [amountError, setAmountError] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-
   const [allUsers, setAllUsers] = useState<string[]>([]);
   const [username] = useState<string>(localStorage.getItem('username') || "");
   const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(false);
@@ -137,14 +137,12 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
       let owed_amounts: number[] = [];
   
       if (splitMethod === 'custom') {
-        // Filter out current user's contribution and map amounts for other users
         const otherUsersContributions = customContributions.filter(
           contribution => contribution.user !== username
         );
         owed_amounts = otherUsersContributions.map(c => parseFloat(c.amount));
       } else if (splitMethod === 'equal') {
-        // For equal split, calculate per person amount excluding the current user
-        const perPersonAmount = Number(amount) / (selectedUsers.length + 1); // +1 for current user
+        const perPersonAmount = Number(amount) / (selectedUsers.length + 1);
         owed_amounts = selectedUsers.map(() => perPersonAmount);
       }
   
@@ -156,9 +154,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
         amount: Number(amount),
         description: description
       };
-  
-      console.log('Transaction data:', transactionData); // For debugging
-  
+
       const response = await fetch('http://localhost:8080/api/transactions/createTransaction', {
         method: 'POST',
         headers: {
@@ -171,15 +167,20 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
         throw new Error('Failed to create transaction');
       }
   
-      const result = await response.json();
-      console.log('Transaction created:', result);
-      alert('Transaction created successfully!');
+      // Dispatch event to update balances
+      window.dispatchEvent(new Event('expenseAdded'));
+      
+      // Show success message
+      // alert('Transaction created successfully!');
+      
+      // Close the modal and return to landing page
+      onClose();
+  
     } catch (error) {
       console.error('Error creating transaction:', error);
       alert('Failed to create transaction. Please try again.');
     }
   };
-
   // Add getFriends in useEffect
   useEffect(() => {
     const getFriends = async () => {
