@@ -14,8 +14,13 @@ import { Link } from 'react-router-dom';
 import NavItem from '../components/NavItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
 import { Outlet, useLocation } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 
-const LandingPage: React.FC = () => {
+
+interface LandingPageProps {
+  handleSignOut: () => void;
+}
+const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
@@ -68,6 +73,7 @@ const LandingPage: React.FC = () => {
       setSelectedUser(null); // Close the confirmation dialog
     }
   };
+
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
@@ -165,7 +171,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">{getPageTitle()}</h2>
             {/* <p className="text-gray-500 mt-1">Welcome back!</p> */}
             <p className="text-gray-500 mt-1">
-    Welcome back{localStorage.getItem('username') ? `, ${localStorage.getItem('username')}!` : '!'}
+            Welcome back{localStorage.getItem('username') ? `, ${localStorage.getItem('username')}!` : '!'}
 </p>
 
           </div>
@@ -183,6 +189,13 @@ const LandingPage: React.FC = () => {
             >
               <Plus className="h-5 w-5" />
               <span>Add Expense</span>
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-lg border border-gray-300 transition-colors duration-200 ml-2"
+            >
+              <LogOut size={18} />
+              <span>Logout</span>
             </button>
           </div>
         </div>
