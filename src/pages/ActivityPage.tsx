@@ -5,38 +5,44 @@ interface Activity {
   id: number;
   title: string;
   amount: number;
-  group: string;
+  group: string; // Could be used for category or empty string in this case
   time: string;
-  users: number;
+  description: string;
+  users: string; // String representation of users involved
 }
 
 const ActivityPage: React.FC = () => {
+  const [username] = useState<string>(localStorage.getItem('username') || ""); // Move useState inside the component
   const [activities, setActivities] = useState<Activity[]>([]);
 
-  // use this for api integration
-  // useEffect(() => {
-  //   fetch('/api/activities') // Replace with your endpoint
-  //     .then(response => response.json())
-  //     .then(data => setActivities(data))
-  //     .catch(error => console.error('Error fetching activities:', error));
-  // }, []);
-  
-
   useEffect(() => {
-    // Mock data to simulate an API response
-    const mockData: Activity[] = [
-      { id: 4, title: 'Electric Bill', amount: 120.0, group: 'Roommates', time: '3d ago', users: 4 },
-      { id: 5, title: 'Movie Tickets', amount: 50.0, group: 'Friends', time: '4d ago', users: 3 },
-      { id: 6, title: 'Concert Tickets', amount: 200.0, group: 'Coworkers', time: '1w ago', users: 6 },
-      { id: 1, title: 'Grocery Shopping', amount: 85.2, group: 'Roommates', time: '2h ago', users: 4 },
-      { id: 2, title: 'Netflix', amount: 15.99, group: 'Family', time: '5h ago', users: 3 },
-      { id: 3, title: 'Dinner', amount: 125.5, group: 'Friends', time: '1d ago', users: 5 },
-    ];
-    
+    const fetchActivities = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/transactions/getTransactionHistory?username=${username}`
+        );
+        const data = await response.json();
 
-    // Simulate API fetch and update state
-    setActivities(mockData);
-  }, []);
+        const transformedData: Activity[] = data.transactions.map(
+          (transaction: any, index: number) => ({
+            id: index + 1, // Create a unique ID
+            title: `${transaction.sender} paid ${transaction.receiver}`,
+            amount: transaction.amount,
+            group: '', // Optional; add grouping if necessary
+            time: new Date(parseFloat(transaction.timestamp) * 1000).toLocaleString(), // Convert timestamp to readable time
+            description: transaction.description,
+            users: `${transaction.sender}, ${transaction.receiver}`, // List users involved
+          })
+        );
+
+        setActivities(transformedData);
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+      }
+    };
+
+    fetchActivities();
+  }, [username]); // Add username as a dependency
 
   return (
     <div className="p-6 bg-white rounded-2xl">
@@ -54,6 +60,7 @@ const ActivityPage: React.FC = () => {
                 amount={activity.amount}
                 group={activity.group}
                 time={activity.time}
+                description={activity.description} // Pass description to ActivityItem
                 users={activity.users}
               />
             ))}
