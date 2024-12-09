@@ -24,14 +24,17 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [newFriend, setNewFriend] = useState<string>('');
-  const [username, setUsername] = useState<string | undefined>("Sankalp1");
+  // const [username, setUsername] = useState<string | undefined>("Sankalp1");
+  // const [username] = useState<string | undefined>(localStorage.getItem('username') || undefined);
+  const [username] = useState<string>(localStorage.getItem('username') || "");
+
 
 
   useEffect(() => {
     const getFriends = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/users/getUser?username=${username}`,
+          `http://localhost:8080/api/users/getFriends?username=${username}`,
           {
             headers: {
               'Content-Type': 'application/json'
