@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const AccountPage: React.FC = () => {
   const [profilePic, setProfilePic] = useState<string>('https://img.icons8.com/?size=100&id=42217&fiormat=png&color=575799');
-  const [name, setName] = useState<string>('John Doe');
-  const [email, setEmail] = useState<string>('john.doe@example.com');
+  const [name, setName] = useState<string>(localStorage.getItem('username') || "");
+  const [email, setEmail] = useState<string>(localStorage.getItem('username')+'@gmail.com');
   const [currency, setCurrency] = useState<string>('USD');
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
