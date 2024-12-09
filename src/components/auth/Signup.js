@@ -45,8 +45,8 @@ export default function Signup({ onAuthenticate }) {
                 localStorage.setItem('username', signupState.username);
                 
                 onAuthenticate();
-                const message = "Welcome " + response.data[1];
-                alert(message);
+                // const message = "Welcome " + response.data[1];
+                // alert(message);
                 
             }
             

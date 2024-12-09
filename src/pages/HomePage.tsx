@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import StatCard from '../components/StatCard';
 import GroupItem from '../components/GroupItem';
 import { TrendingUp, Users, CreditCard } from 'lucide-react';
+import ActivityPage from './ActivityPage';
 
 
 interface BalanceResponse {
@@ -103,15 +104,8 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-        {/* Groups Overview */}
-        {/* <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
-          <h3 className="text-xl font-semibold mb-6">Active Groups</h3>
-          <div className="space-y-4">
-            <GroupItem name="Roommates" members={4} balance={320.50} />
-            <GroupItem name="Trip to Vegas" members={6} balance={-45.20} />
-            <GroupItem name="Family" members={3} balance={0} />
-          </div>
-      </div> */}
+        <ActivityPage />
+        
     </>
   );
 }; // Removed extra parenthesis

@@ -1,18 +1,30 @@
 import ActivityItem from 'components/ActivityItem';
 import React, { useState, useEffect } from 'react';
 
+// Interface for API Response
+interface TransactionResponse {
+  transactions: {
+    sender: string;
+    receiver: string;
+    amount: number;
+    timestamp: string;
+    description: string;
+  }[];
+}
+
+// Interface for Activity after transformation - match ActivityItem props
 interface Activity {
   id: number;
   title: string;
   amount: number;
-  group: string; // Could be used for category or empty string in this case
+  group: string;
   time: string;
   description: string;
-  users: string; // String representation of users involved
+  users: string;  // Changed to string to match ActivityItem props
 }
 
 const ActivityPage: React.FC = () => {
-  const [username] = useState<string>(localStorage.getItem('username') || ""); // Move useState inside the component
+  const [username] = useState<string>(localStorage.getItem('username') || "");
   const [activities, setActivities] = useState<Activity[]>([]);
 
   useEffect(() => {
@@ -21,17 +33,28 @@ const ActivityPage: React.FC = () => {
         const response = await fetch(
           `http://localhost:8080/api/transactions/getTransactionHistory?username=${username}`
         );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch activities');
+        }
+
         const data = await response.json();
+        console.log('API Response:', data);
+
+        if (!data.transactions || !Array.isArray(data.transactions)) {
+          console.error('Invalid response format:', data);
+          return;
+        }
 
         const transformedData: Activity[] = data.transactions.map(
           (transaction: any, index: number) => ({
-            id: index + 1, // Create a unique ID
+            id: index + 1,
             title: `${transaction.sender} paid ${transaction.receiver}`,
             amount: transaction.amount,
-            group: '', // Optional; add grouping if necessary
-            time: new Date(parseFloat(transaction.timestamp) * 1000).toLocaleString(), // Convert timestamp to readable time
-            description: transaction.description,
-            users: `${transaction.sender}, ${transaction.receiver}`, // List users involved
+            group: 'Personal',
+            time: new Date(parseFloat(transaction.timestamp) * 1000).toLocaleString(),
+            description: transaction.description || '',
+            users: `${transaction.sender}, ${transaction.receiver}`  // Pass as string
           })
         );
 
@@ -41,30 +64,34 @@ const ActivityPage: React.FC = () => {
       }
     };
 
-    fetchActivities();
-  }, [username]); // Add username as a dependency
+    if (username) {
+      fetchActivities();
+    }
+  }, [username]);
 
   return (
     <div className="p-6 bg-white rounded-2xl">
       <h2 className="text-2xl font-bold mb-4">Check out your recent activity below!</h2>
-      {/* Activity and Groups Grid */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6">
-        {/* Recent Activity */}
         <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm p-6">
           <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
-          <div className="space-y-4">
-            {activities.map((activity) => (
-              <ActivityItem
-                key={activity.id}
-                title={activity.title}
-                amount={activity.amount}
-                group={activity.group}
-                time={activity.time}
-                description={activity.description} // Pass description to ActivityItem
-                users={activity.users}
-              />
-            ))}
-          </div>
+          {activities.length > 0 ? (
+            <div className="space-y-4">
+              {activities.map((activity) => (
+                <ActivityItem
+                  key={activity.id}
+                  title={activity.title}
+                  amount={activity.amount}
+                  group={activity.group}
+                  time={activity.time}
+                  description={activity.description}
+                  users={activity.users}  // Now passing string instead of number
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500">No recent activities</p>
+          )}
         </div>
       </div>
     </div>

@@ -241,12 +241,13 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
             path="/"
             isExpanded={isExpanded}
           />
-          <NavItem
+          {/* //TODO */}
+          {/* <NavItem
             icon={<Users size={20} />}
             label="Groups"
             path="/groups"
             isExpanded={isExpanded}
-          />
+          /> */}
           <NavItem
             icon={<UserPlus size={20} />}
             label="Friends"
