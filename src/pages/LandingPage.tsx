@@ -10,6 +10,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import NavItem from '../components/NavItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
 import { Outlet, useLocation } from 'react-router-dom';
@@ -22,12 +23,12 @@ const LandingPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<{ name: string; amount: number } | null>(null);
 
   // State for balances
-  
+
   const [balances, setBalances] = useState([
-    { name: 'Alice', amount: -25.0 , email: 'abc.gmail.com'}, // You owe Alice
-    { name: 'Bob', amount: 50.0 , email: 'abc.gmail.com'},   // Bob owes you
-    { name: 'Charlie', amount: -10.0 , email: 'abc.gmail.com'}, // You owe Charlie
-    { name: 'Vijeth', amount: 0.0 , email: 'abc.gmail.com'}, // You owe Charlie
+    { name: 'Alice', amount: -25.0, email: 'abc.gmail.com' }, // You owe Alice
+    { name: 'Bob', amount: 50.0, email: 'abc.gmail.com' },   // Bob owes you
+    { name: 'Charlie', amount: -10.0, email: 'abc.gmail.com' }, // You owe Charlie
+    { name: 'Vijeth', amount: 0.0, email: 'abc.gmail.com' }, // You owe Charlie
   ]);
 
   const location = useLocation();
@@ -76,9 +77,11 @@ const LandingPage: React.FC = () => {
           <div className="h-8 w-8 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
             <span className="text-lg font-bold text-white">S</span>
           </div>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-            Coinsensus
-          </h1>
+          <Link to="/">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              &nbsp; Coinsensus
+            </h1>
+          </Link>
         </div>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -107,44 +110,46 @@ const LandingPage: React.FC = () => {
             <span className="text-xl font-bold text-white">S</span>
           </div>
           {isExpanded && (
-            <h1 className="text-2xl font-bold ml-3 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              Coinsensus
+            <Link to="/">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              &nbsp; Coinsensus
             </h1>
+          </Link>
           )}
         </div>
-        
+
         <div className="space-y-2 h-screen">
-          <NavItem 
-            icon={<Home size={20} />} 
-            label="Home" 
-            path="/" 
-            isExpanded={isExpanded} 
+          <NavItem
+            icon={<Home size={20} />}
+            label="Home"
+            path="/"
+            isExpanded={isExpanded}
           />
-          <NavItem 
-            icon={<Users size={20} />} 
-            label="Groups" 
-            path="/groups" 
-            isExpanded={isExpanded} 
+          <NavItem
+            icon={<Users size={20} />}
+            label="Groups"
+            path="/groups"
+            isExpanded={isExpanded}
           />
-          <NavItem 
-            icon={<UserPlus size={20} />} 
-            label="Friends" 
-            path="/friends" 
-            isExpanded={isExpanded} 
+          <NavItem
+            icon={<UserPlus size={20} />}
+            label="Friends"
+            path="/friends"
+            isExpanded={isExpanded}
           />
-          <NavItem 
-            icon={<Activity size={20} />} 
-            label="Activity" 
-            path="/activity" 
-            isExpanded={isExpanded} 
+          <NavItem
+            icon={<Activity size={20} />}
+            label="Activity"
+            path="/activity"
+            isExpanded={isExpanded}
           />
-          <NavItem 
-            icon={<Settings size={20} />} 
-            label="Account" 
-            path="/account" 
-            isExpanded={isExpanded} 
+          <NavItem
+            icon={<Settings size={20} />}
+            label="Account"
+            path="/account"
+            isExpanded={isExpanded}
           />
-</div>
+        </div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
@@ -191,36 +196,35 @@ const LandingPage: React.FC = () => {
 
       {/* Settle Transactions Modal */}
       {isSettleTransactionsOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-    <div className="bg-white rounded-xl p-8 w-96">
-      <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
-      {nonZeroBalances.length > 0 ? (
-        <ul className="space-y-4">
-          {nonZeroBalances.map((balance) => (
-            <li
-              key={balance.name}
-              className={`flex justify-between p-2 rounded-lg cursor-pointer ${
-                balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}
-              onClick={() => setSelectedUser(balance)}
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-8 w-96">
+            <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
+            {nonZeroBalances.length > 0 ? (
+              <ul className="space-y-4">
+                {nonZeroBalances.map((balance) => (
+                  <li
+                    key={balance.name}
+                    className={`flex justify-between p-2 rounded-lg cursor-pointer ${balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                    onClick={() => setSelectedUser(balance)}
+                  >
+                    <span>{balance.name}</span>
+                    <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-gray-500">Nothing to settle</p>
+            )}
+            <button
+              onClick={closeSettleTransactionsModal}
+              className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
             >
-              <span>{balance.name}</span>
-              <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-center text-gray-500">Nothing to settle</p>
+              Close
+            </button>
+          </div>
+        </div>
       )}
-      <button
-        onClick={closeSettleTransactionsModal}
-        className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
 
       {/* Confirm Settlement Dialog */}
       {selectedUser && (
