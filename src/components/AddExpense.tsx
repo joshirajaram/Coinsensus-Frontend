@@ -49,7 +49,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
   const [description, setDescription] = useState<string>('');
 
   const [allUsers, setAllUsers] = useState<string[]>([]);
-  const [username] = useState<string>("Sankalp1");
+  const [username] = useState<string>(localStorage.getItem('username') || "");
   const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(false);
   const groups = [
     { id: 'group1', name: 'Office Friends', members: ['Alice', 'Bob', 'Charlie'] },
