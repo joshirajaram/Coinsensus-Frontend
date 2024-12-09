@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Home,
   Users,
@@ -22,21 +22,25 @@ import DollarIcon from '../assets/images/dollar.png';
 interface LandingPageProps {
   handleSignOut: () => void;
 }
+
+interface BalanceResponse {
+  balances: {
+    [key: string]: number;
+  }
+}
+
+
 const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState<boolean>(false);
   const [isSettleTransactionsOpen, setIsSettleTransactionsOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<{ name: string; amount: number } | null>(null);
+  const [balances, setBalances] = useState<Array<{ name: string; amount: number }>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [shouldRefreshBalances, setShouldRefreshBalances] = useState(false);
 
-  // State for balances
 
-  const [balances, setBalances] = useState([
-    { name: 'Alice', amount: -25.0, email: 'abc.gmail.com' }, // You owe Alice
-    { name: 'Bob', amount: 50.0, email: 'abc.gmail.com' },   // Bob owes you
-    { name: 'Charlie', amount: -10.0, email: 'abc.gmail.com' }, // You owe Charlie
-    { name: 'Vijeth', amount: 0.0, email: 'abc.gmail.com' }, // You owe Charlie
-  ]);
 
   const location = useLocation();
 
@@ -60,20 +64,114 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
     }
   };
 
-  const closeAddExpenseModal = () => setIsAddExpenseOpen(false);
   const openAddExpenseModal = () => setIsAddExpenseOpen(true);
 
   const closeSettleTransactionsModal = () => setIsSettleTransactionsOpen(false);
   const openSettleTransactionsModal = () => setIsSettleTransactionsOpen(true);
 
-  const confirmSettlement = () => {
+  const confirmSettlement = async () => {
     if (selectedUser) {
-      // Remove the settled user from the balances
-      setBalances((prevBalances) =>
-        prevBalances.filter((balance) => balance.name !== selectedUser.name)
-      );
-      setSelectedUser(null); // Close the confirmation dialog
+      try {
+        const username = localStorage.getItem('username');
+        const amount = Math.abs(selectedUser.amount); // Use absolute value for the API
+  
+        // Determine who pays whom based on amount sign
+        const transactionData = {
+          method: "add_expense",
+          paid_by: selectedUser.amount > 0 ? selectedUser.name : username, // If amount is positive, they owe us
+          owed_by: [selectedUser.amount > 0 ? username : selectedUser.name], // If amount is positive, we are owed
+          owed_amounts: [amount],
+          amount: amount,
+          description: "settled up"
+        };
+  
+        console.log("Settlement transaction data:", transactionData); // Debug log
+  
+        const response = await fetch('http://localhost:8080/api/transactions/createTransaction', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(transactionData)
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to create settlement transaction');
+        }
+  
+        // If successful, update the UI
+        setBalances((prevBalances) =>
+          prevBalances.filter((balance) => balance.name !== selectedUser.name)
+        );
+        setSelectedUser(null); // Close the confirmation dialog
+        setShouldRefreshBalances(true); // Refresh balances after settlement
+        setIsSettleTransactionsOpen(false); // Close the settle transactions modal
+  
+        // Dispatch event to update balances
+        window.dispatchEvent(new Event('settlementConfirm'));
+        // Optional: Show success message
+        // alert('Settlement transaction completed successfully!');
+  
+      } catch (error) {
+        console.error('Error creating settlement transaction:', error);
+        alert('Failed to create settlement transaction. Please try again.');
+      }
     }
+  };
+
+  const fetchBalances = async () => {
+    const username = localStorage.getItem('username');
+    console.log("Fetching balances for username:", username);
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `http://localhost:8080/api/transactions/getBalances?username=${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch balances');
+      }
+
+      const data = await response.json();
+      console.log("API Response data:", data);
+
+      const balancesArray = Object.entries(data.balances).map(([name, amount]) => ({
+        name,
+        amount: Number(amount),
+      }));
+
+      setBalances(balancesArray);
+    } catch (error) {
+      console.error('Error fetching balances:', error);
+    } finally {
+      setIsLoading(false);
+      setShouldRefreshBalances(false);
+    }
+  };
+
+  // Initial fetch on mount
+  useEffect(() => {
+    fetchBalances();
+  }, []); // Empty dependency array for initial load
+
+  // Refresh balances when shouldRefreshBalances changes
+  useEffect(() => {
+    if (shouldRefreshBalances) {
+      fetchBalances();
+    }
+  }, [shouldRefreshBalances]);
+
+  // Modify closeAddExpenseModal to trigger balance refresh
+  const closeAddExpenseModal = () => {
+    setIsAddExpenseOpen(false);
+    setShouldRefreshBalances(true); // This will trigger the balance refresh
   };
 
 
@@ -225,35 +323,36 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
 
       {/* Settle Transactions Modal */}
       {isSettleTransactionsOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-          <div className="bg-white rounded-xl p-8 w-96">
-            <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
-            {nonZeroBalances.length > 0 ? (
-              <ul className="space-y-4">
-                {nonZeroBalances.map((balance) => (
-                  <li
-                    key={balance.name}
-                    className={`flex justify-between p-2 rounded-lg cursor-pointer ${balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}
-                    onClick={() => setSelectedUser(balance)}
-                  >
-                    <span>{balance.name}</span>
-                    <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-center text-gray-500">Nothing to settle</p>
-            )}
-            <button
-              onClick={closeSettleTransactionsModal}
-              className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-            >
-              Close
-            </button>
-          </div>
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+        <div className="bg-white rounded-xl p-8 w-96">
+          <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
+          {nonZeroBalances.length > 0 ? (
+            <ul className="space-y-4">
+              {nonZeroBalances.map((balance) => (
+                <li
+                  key={balance.name}
+                  className={`flex justify-between p-2 rounded-lg cursor-pointer ${
+                    balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}
+                  onClick={() => setSelectedUser(balance)}
+                >
+                  <span>{balance.name}</span>
+                  <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-gray-500">Nothing to settle</p>
+          )}
+          <button
+            onClick={closeSettleTransactionsModal}
+            className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+          >
+            Close
+          </button>
         </div>
-      )}
+      </div>
+    )}
 
       {/* Confirm Settlement Dialog */}
       {selectedUser && (

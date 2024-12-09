@@ -11,7 +11,7 @@ export interface StatCardProps {
   icon: ReactNode;
   title: string;
   amount: string;
-  trend: 'up' | 'down';
+  trend: 'up' | 'down' | 'neutral';
   trendValue: string;
 }
 
