@@ -8,6 +8,10 @@ import {
   TextField,
 } from '@mui/material';
 
+// var Username : "user_name_13";
+
+
+
 interface Friend {
   id: number;
   name: string;
@@ -20,15 +24,48 @@ const FriendsPage: React.FC = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [newFriend, setNewFriend] = useState<string>('');
+  const [username, setUsername] = useState<string | undefined>("Sankalp1");
 
-  // API integration later on -TODO
-  // useEffect(() => {
-  //   fetch('/api/friends') // Replace with your endpoint
-  //     .then((response) => response.json())
-  //     .then((data) => setFriends(data))
-  //     .catch((error) => console.error('Error fetching friends:', error));
-  // }, []);
 
+  useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/users/getUser?username=${username}`,
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch friends');
+        }
+  
+        const result = await response.json();
+        
+        // Transform the friends data to match your Friend interface
+        const friendsList = result.friends.map((friendName: string, index: number) => ({
+          id: index + 1,
+          name: friendName,
+          mutualGroups: 0,
+          profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799'
+        }));
+  
+        setFriends(friendsList);
+      } catch (error) {
+        console.error('Error fetching friends:', error);
+        // You might want to show an error message to the user
+        alert('Failed to load friends. Please refresh the page.');
+      }
+    };
+  
+    if (username) {
+      getFriends();
+    }
+  }, [username]); // Dependency on username
+  
   useEffect(() => {
     // Mock data to simulate an API response
     const mockData: Friend[] = [
@@ -42,19 +79,46 @@ const FriendsPage: React.FC = () => {
     setFriends(mockData);
   }, []);
 
-  const handleAddFriend = () => {
-    // Simulate adding a friend (you would replace this with an API call)
+  const handleAddFriend = async () => {
     if (newFriend.trim()) {
-      const newFriendObject: Friend = {
-        id: friends.length + 1,
-        name: newFriend,
-        email: `${newFriend.toLowerCase().replace(/\s+/g, '')}@example.com`,
-        mutualGroups: 0,
-        profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799',
-      };
-      setFriends([...friends, newFriendObject]);
-      setNewFriend('');
-      setIsModalOpen(false);
+      try {
+        // Make API call to add friend
+        const response = await fetch(
+          `http://localhost:8080/api/users/addFriend?username=${username}&friendName=${newFriend}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error('Failed to add friend');
+        }
+  
+        const result = await response.json();
+        
+        // Create new friend object for UI update
+        const newFriendObject: Friend = {
+          id: friends.length + 1,
+          name: newFriend,
+          email: `${newFriend.toLowerCase().replace(/\s+/g, '')}@example.com`,
+          mutualGroups: 0,
+          profilePicture: 'https://img.icons8.com/?size=100&id=42217&format=png&color=575799',
+        };
+        
+        setFriends([...friends, newFriendObject]);
+        setNewFriend('');
+        setIsModalOpen(false);
+  
+        // Optionally show success message
+        console.log('Friend added successfully:', result);
+      } catch (error) {
+        console.error('Error adding friend:', error);
+        // Optionally show error message to user
+        alert('Failed to add friend. Please try again.');
+      }
     }
   };
 
@@ -92,7 +156,6 @@ const FriendsPage: React.FC = () => {
               />
               <div className="flex-1">
                 <h4 className="text-lg font-medium">{friend.name}</h4>
-                <p className="text-sm text-gray-600">{friend.email}</p>
               </div>
               <p className="text-sm text-gray-500">{friend.mutualGroups} mutual groups</p>
             </div>
