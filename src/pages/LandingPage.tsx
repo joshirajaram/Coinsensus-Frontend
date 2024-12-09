@@ -163,7 +163,11 @@ const LandingPage: React.FC = () => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
           <div>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">{getPageTitle()}</h2>
-            <p className="text-gray-500 mt-1">Welcome back!</p>
+            {/* <p className="text-gray-500 mt-1">Welcome back!</p> */}
+            <p className="text-gray-500 mt-1">
+    Welcome back{localStorage.getItem('username') ? `, ${localStorage.getItem('username')}!` : '!'}
+</p>
+
           </div>
           <div className="flex items-center space-x-4">
             <button
