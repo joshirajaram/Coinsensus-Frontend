@@ -114,7 +114,7 @@ const FriendsPage: React.FC = () => {
 
   return (
     <div className="p-6 bg-white rounded-2xl">
-      <h2 className="text-2xl font-bold mb-4">Check out all your friends!</h2>
+      <h2 className="text-2xl font-bold mb-4"></h2>
       <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold">Your Friends List</h3>
