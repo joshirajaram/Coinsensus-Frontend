@@ -38,10 +38,21 @@ export default function Signup({ onAuthenticate }) {
     const createAccount = async (data) => {
         try {
             const response = await axios.post('http://localhost:8080/api/users/createUser', data);
-            console.log('Account created successfully:', response.data);
-            onAuthenticate();
+            if(response.data == "User already exists"){
+                alert("User already exists, choose a different username!");
+            }else{
+                console.log('Account created successfully:', response.data);
+                localStorage.setItem('username', signupState.username);
+                
+                onAuthenticate();
+                const message = "Welcome " + response.data[1];
+                alert(message);
+                
+            }
+            
         } catch (error) {
             console.error('Error creating account:', error.response ? error.response.data : error.message);
+            
         }
     };
 
