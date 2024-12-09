@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import StatCard from '../components/StatCard';
-import ActivityItem from '../components/ActivityItem';
 import GroupItem from '../components/GroupItem';
 import { TrendingUp, Users, CreditCard } from 'lucide-react';
 
@@ -104,35 +103,6 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-      {/* Activity and Groups Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
-        {/* Recent Activity */}
-        <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm p-6">
-          <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
-          <div className="space-y-4">
-            <ActivityItem 
-              title="Grocery Shopping"
-              amount={85.20}
-              group="Roommates"
-              time="2h ago"
-              users={4}
-            />
-            <ActivityItem 
-              title="Netflix"
-              amount={15.99}
-              group="Family"
-              time="5h ago"
-              users={3}
-            />
-            <ActivityItem 
-              title="Dinner"
-              amount={125.50}
-              group="Friends"
-              time="1d ago"
-              users={5}
-            />
-          </div>
-        </div>
         {/* Groups Overview */}
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
           <h3 className="text-xl font-semibold mb-6">Active Groups</h3>
@@ -141,7 +111,6 @@ const HomePage: React.FC = () => {
             <GroupItem name="Trip to Vegas" members={6} balance={-45.20} />
             <GroupItem name="Family" members={3} balance={0} />
           </div>
-        </div>
       </div>
     </>
   );

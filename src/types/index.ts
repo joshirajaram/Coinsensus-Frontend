@@ -20,9 +20,9 @@ export interface ActivityItemProps {
   amount: number;
   group: string;
   time: string;
-  users: number;
+  description: string;
+  users: string; // Ensure this matches the expected data type
 }
-
 export interface GroupItemProps {
   name: string;
   members: number;
