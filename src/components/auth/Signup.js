@@ -13,6 +13,8 @@ fields.forEach(field => fieldsState[field.id] = '');
 export default function Signup({ onAuthenticate }) {
     const [signupState, setSignupState] = useState(fieldsState);
 
+    const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
     const handleChange = (e) => setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
     const handleSubmit = async (e) => {
@@ -37,7 +39,7 @@ export default function Signup({ onAuthenticate }) {
 
     const createAccount = async (data) => {
         try {
-            const response = await axios.post('http://localhost:8080/api/users/createUser', data);
+            const response = await axios.post(`${baseUrl}/api/users/createUser`, data);
             if(response.data == "User already exists"){
                 alert("User already exists, choose a different username!");
             }else{

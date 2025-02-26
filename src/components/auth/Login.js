@@ -11,6 +11,8 @@ loginFields.forEach(field => fieldsState[field.id] = '');
 export default function Login({ onAuthenticate }) {
     const [loginState, setLoginState] = useState(fieldsState);
 
+    const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
     const handleChange = (e) => {
         setLoginState({ ...loginState, [e.target.id]: e.target.value });
     };
@@ -22,7 +24,7 @@ export default function Login({ onAuthenticate }) {
 
     const authenticateUser = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/users/login/${loginState.username}/${loginState.password}`);
+            const response = await axios.get(`${baseUrl}/api/users/login/${loginState.username}/${loginState.password}`);
 
             if (response.status === 200 && response.data) {
                 console.log(response)

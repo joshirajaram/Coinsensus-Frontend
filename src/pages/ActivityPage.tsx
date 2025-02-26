@@ -27,11 +27,13 @@ const ActivityPage: React.FC = () => {
   const [username] = useState<string>(localStorage.getItem('username') || "");
   const [activities, setActivities] = useState<Activity[]>([]);
 
+  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/transactions/getTransactionHistory?username=${username}`
+          `${baseUrl}/api/transactions/getTransactionHistory?username=${username}`
         );
         
         if (!response.ok) {

@@ -56,6 +56,8 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
     { id: 'group2', name: 'Hiking Buddies', members: ['David', 'Alice'] },
   ];
 
+  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
   const handleExpenseTypeChange = (event: React.MouseEvent<HTMLElement>, newType: string | null) => {
     if (newType) {
       setExpenseType(newType);
@@ -155,7 +157,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
         description: description
       };
 
-      const response = await fetch('http://localhost:8080/api/transactions/createTransaction', {
+      const response = await fetch(`${baseUrl}/api/transactions/createTransaction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -187,7 +189,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
       try {
         setIsLoadingUsers(true);
         const response = await fetch(
-          `http://localhost:8080/api/users/getUser?username=${username}`,
+          `${baseUrl}/api/users/getUser?username=${username}`,
           {
             headers: {
               'Content-Type': 'application/json'

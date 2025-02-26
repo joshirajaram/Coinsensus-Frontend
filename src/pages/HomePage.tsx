@@ -16,13 +16,15 @@ const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [totalBalance, setTotalBalance] = useState<number>(0);
 
+  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
   const fetchBalances = async () => {
     try {
       const username = localStorage.getItem('username');
       if (!username) return;
 
       const response = await fetch(
-        `http://localhost:8080/api/transactions/getBalances?username=${username}`,
+        `${baseUrl}/api/transactions/getBalances?username=${username}`,
         {
           headers: {
             'Content-Type': 'application/json'
