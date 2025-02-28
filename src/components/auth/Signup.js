@@ -39,7 +39,10 @@ export default function Signup({ onAuthenticate }) {
 
     const createAccount = async (data) => {
         try {
-            const response = await axios.post(`${baseUrl}/api/users/createUser`, data);
+            console.log("DEBUG LOG: Backend Base URL: ", baseUrl);
+            const url = `${baseUrl}/api/users/createUser`;
+            console.log("DEBUG LOG: SignUp URL: ", url);
+            const response = await axios.post(url, data);
             if(response.data == "User already exists"){
                 alert("User already exists, choose a different username!");
             }else{

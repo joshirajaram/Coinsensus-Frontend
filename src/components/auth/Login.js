@@ -24,7 +24,10 @@ export default function Login({ onAuthenticate }) {
 
     const authenticateUser = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/api/users/login/${loginState.username}/${loginState.password}`);
+            console.log("DEBUG LOG: Backend Base URL: ", baseUrl);
+            const url = `${baseUrl}/api/users/login/${loginState.username}/${loginState.password}`;
+            console.log("DEBUG LOG: Login URL: ", url);
+            const response = await axios.get(url);
 
             if (response.status === 200 && response.data) {
                 console.log(response)
