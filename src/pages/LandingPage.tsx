@@ -40,7 +40,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [shouldRefreshBalances, setShouldRefreshBalances] = useState(false);
 
-  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   const location = useLocation();
 

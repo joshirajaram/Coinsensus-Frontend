@@ -56,7 +56,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
     { id: 'group2', name: 'Hiking Buddies', members: ['David', 'Alice'] },
   ];
 
-  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   const handleExpenseTypeChange = (event: React.MouseEvent<HTMLElement>, newType: string | null) => {
     if (newType) {

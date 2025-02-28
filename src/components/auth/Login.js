@@ -11,7 +11,7 @@ loginFields.forEach(field => fieldsState[field.id] = '');
 export default function Login({ onAuthenticate }) {
     const [loginState, setLoginState] = useState(fieldsState);
 
-    const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+    const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
     const handleChange = (e) => {
         setLoginState({ ...loginState, [e.target.id]: e.target.value });

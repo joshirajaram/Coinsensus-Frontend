@@ -27,7 +27,7 @@ const ActivityPage: React.FC = () => {
   const [username] = useState<string>(localStorage.getItem('username') || "");
   const [activities, setActivities] = useState<Activity[]>([]);
 
-  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   useEffect(() => {
     const fetchActivities = async () => {

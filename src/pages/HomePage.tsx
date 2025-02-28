@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [totalBalance, setTotalBalance] = useState<number>(0);
 
-  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   const fetchBalances = async () => {
     try {

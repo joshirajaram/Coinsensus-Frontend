@@ -28,7 +28,7 @@ const FriendsPage: React.FC = () => {
   // const [username] = useState<string | undefined>(localStorage.getItem('username') || undefined);
   const [username] = useState<string>(localStorage.getItem('username') || "");
 
-  const baseUrl = process.env.COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   useEffect(() => {
     const getFriends = async () => {
