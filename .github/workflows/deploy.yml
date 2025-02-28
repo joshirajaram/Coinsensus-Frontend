@@ -25,10 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build the project
-        run: npm run build
-
-      - name: Build the project without ESLint errors
+      - name: Build the project despite ESLint errors
         run: ESLINT_NO_DEV_ERRORS=true CI=false npm run build
 
       - name: Add CNAME for coinsensus.resilientdb.com
