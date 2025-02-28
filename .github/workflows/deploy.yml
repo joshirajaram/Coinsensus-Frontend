@@ -27,6 +27,8 @@ jobs:
 
       - name: Build the project despite ESLint errors
         run: ESLINT_NO_DEV_ERRORS=true CI=false npm run build
+        env:
+          REACT_APP_COINSENSUS_BACKEND_URL: ${{ secrets.REACT_APP_COINSENSUS_BACKEND_URL }}
 
       - name: Add CNAME for coinsensus.resilientdb.com
         run: echo "coinsensus.resilientdb.com" > build/CNAME
