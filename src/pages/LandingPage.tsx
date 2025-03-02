@@ -40,7 +40,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [shouldRefreshBalances, setShouldRefreshBalances] = useState(false);
 
-
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   const location = useLocation();
 
@@ -87,7 +87,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   
         console.log("Settlement transaction data:", transactionData); // Debug log
   
-        const response = await fetch('http://localhost:8080/api/transactions/createTransaction', {
+        const response = await fetch(`${baseUrl}/api/transactions/createTransaction`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://localhost:8080/api/transactions/getBalances?username=${username}`,
+        `${baseUrl}/api/transactions/getBalances?username=${username}`,
         {
           method: 'GET',
           headers: {

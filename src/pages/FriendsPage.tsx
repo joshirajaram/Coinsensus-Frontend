@@ -28,13 +28,13 @@ const FriendsPage: React.FC = () => {
   // const [username] = useState<string | undefined>(localStorage.getItem('username') || undefined);
   const [username] = useState<string>(localStorage.getItem('username') || "");
 
-
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
 
   useEffect(() => {
     const getFriends = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/users/getFriends?username=${username}`,
+          `${baseUrl}/api/users/getFriends?username=${username}`,
           {
             headers: {
               'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ const FriendsPage: React.FC = () => {
       try {
         // Make API call to add friend
         const response = await fetch(
-          `http://localhost:8080/api/users/addFriend?username=${username}&friendName=${newFriend}`,
+          `${baseUrl}/api/users/addFriend?username=${username}&friendName=${newFriend}`,
           {
             method: 'POST',
             headers: {

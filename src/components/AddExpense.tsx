@@ -56,6 +56,8 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
     { id: 'group2', name: 'Hiking Buddies', members: ['David', 'Alice'] },
   ];
 
+  const baseUrl = process.env.REACT_APP_COINSENSUS_BACKEND_URL || 'http://localhost:8080';
+
   const handleExpenseTypeChange = (event: React.MouseEvent<HTMLElement>, newType: string | null) => {
     if (newType) {
       setExpenseType(newType);
@@ -179,14 +181,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
       //   amount: Number(amount),
       //   description: description
       // };
-
-      // const response = await fetch('http://localhost:8080/api/transactions/createTransaction', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(transactionData)
-      // });
   
       // if (!response.ok) {
       //   throw new Error('Failed to create transaction');
@@ -227,7 +221,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ onClose }) => {
       try {
         setIsLoadingUsers(true);
         const response = await fetch(
-          `http://localhost:8080/api/users/getUser?username=${username}`,
+          `${baseUrl}/api/users/getUser?username=${username}`,
           {
             headers: {
               'Content-Type': 'application/json'
