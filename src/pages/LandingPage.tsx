@@ -209,7 +209,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
         lg:translate-x-0
         ${isExpanded ? 'lg:w-64' : 'lg:w-20'}
         fixed lg:relative
-        w-64 h-full
+        w-64 overflow-y-auto
         bg-white shadow-xl
         transition-all duration-300
         z-50
@@ -269,8 +269,8 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
         </div>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="hidden lg:block absolute -right-3 top-1/2 bg-white rounded-full p-1.5 shadow-lg hover:shadow-xl transition-shadow"
-        >
+          className="hidden lg:block absolute -right-0  top-1/3 bg-white rounded-full p-2.5 shadow-lg hover:shadow-xl transition-shadow"
+        > 
           <div className="h-4 w-4 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" />
         </button>
       </nav>

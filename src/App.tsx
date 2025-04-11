@@ -25,12 +25,19 @@ const AppContent: React.FC<{
     navigate('/');
   };
 
+  const handleOpenModal = () => {
+    // ✅ open the AddExpense modal
+    const openEvent = new CustomEvent('openAddExpense');
+    window.dispatchEvent(openEvent);
+  };
+
   return (
     <>
       {isModalOpen && <AddExpense onClose={handleCloseModal} />}
       <Routes>
         <Route path="/" element={<LandingPage handleSignOut={handleSignOut} />}>
           <Route index element={<HomePage />} />
+          <Route path="/add-expense" element={<AddExpense onClose={() => navigate('/')} />} />
           <Route path="groups" element={<GroupsPage />} />
           <Route path="friends" element={<FriendsPage />} />
           <Route path="activity" element={<ActivityPage />} />
@@ -44,7 +51,7 @@ const AppContent: React.FC<{
 
 // Main App component
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => setIsModalOpen(true);
