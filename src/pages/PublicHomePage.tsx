@@ -5,7 +5,7 @@ import GroupItem from '../components/GroupItem';
 import { TrendingUp, Users, CreditCard, ShieldCheck, TimerReset, Wallet } from 'lucide-react';
 import ActivityPage from './ActivityPage';
 import { useNavigate } from 'react-router-dom';
-import "./HomePage.css";
+import "./PublicHomePage.css";
 import { Menu, X } from "lucide-react";
 import Particles from "react-tsparticles";  
 import { loadFull } from "tsparticles";
@@ -129,14 +129,19 @@ const PublicHomePage = ({ onLoginClick }: { onLoginClick: () => void }) => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-teal-700 mb-6">Vision & Technology</h2>
           <p className="text-gray-700 text-lg leading-relaxed text-justify">
-            Coinsensus isn’t just another expense tracker — it’s a decentralized financial coordination layer designed with the resilience of blockchain technology. Inspired by the cutting-edge research at UC Davis, Coinsensus is powered by the <span className="font-semibold text-teal-700">ResilientDB</span> ecosystem, enabling high-throughput consensus protocols like HotStuff and Streamlet to manage and verify group financial data.
+            Coinsensus isn’t just another expense tracker — it’s a decentralized financial coordination layer designed with the resilience of blockchain technology. Inspired by the cutting-edge research at <span className="font-semibold text-teal-700 hover:text-yellow-600 underline underline-offset-4 duration-underline transition-all duration-300 ease-in-out">Expo Lab</span> at the University of California, Davis, Coinsensus is powered by the <span className="font-semibold text-teal-700 hover:text-yellow-600 underline underline-offset-4 duration-underline transition-all duration-300 ease-in-out">ResilientDB</span> ecosystem, enabling high-throughput consensus protocols like HotStuff and Streamlet to manage and verify group financial data.
           </p>
           <p className="text-gray-700 text-lg leading-relaxed mt-6 text-justify">
-            The platform ensures <span className="font-semibold text-teal-700">Byzantine fault tolerance</span>, meaning your expense records stay secure and accurate even in the face of malicious activity. Through a consensus-first architecture, Coinsensus guarantees that every transaction — whether it's a bill split or a debt settlement — is approved by a quorum of group members and written immutably.
+            The platform ensures <span className="font-semibold text-teal-700 hover:text-yellow-600 underline underline-offset-4 duration-underline transition-all duration-300 ease-in-out">Byzantine fault tolerance</span>, meaning your expense records stay secure and accurate even in the face of malicious activity. Through a consensus-first architecture, Coinsensus guarantees that every transaction — whether it's a bill split or a debt settlement — is approved by a quorum of group members and written immutably.
           </p>
           <p className="text-gray-700 text-lg leading-relaxed mt-6 text-justify">
             Coinsensus redefines trust for financial collaboration — where every group becomes a self-governing economic entity without depending on intermediaries. It is an open, research-driven initiative that aims to revolutionize how we coordinate and reach agreements in shared financial responsibilities.
           </p>
+          <p className="text-gray-700 text-lg leading-relaxed mt-6 text-justify">
+          <span className="font-semibold text-teal-700 hover:text-yellow-600 underline underline-offset-4 duration-underline transition-all duration-300 ease-in-out">Apache Incubator Project : </span> 
+          ResilientDB is currently an incubating project under the Apache Software Foundation. This affiliation underscores its commitment to open-source principles, community-driven development, and adherence to high-quality software standards.
+          </p>
+          
         </div>
       </section>
       {/* Footer */}

@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 import NavItem from '../components/NavItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation        } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import DollarIcon from '../assets/images/dollar.png';
 import { useNavigate } from 'react-router-dom';
@@ -307,13 +307,13 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
               <Plus className="h-5 w-5" />
               <span>Add Expense</span>
             </button>
-            <button
+            {/* <button
               onClick={handleSignIn}
               className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-lg border border-gray-300 transition-colors duration-200 ml-2"
             >
               <LogOut size={18} />
               <span>Login</span>
-            </button>
+            </button> */}
             <button
               onClick={handleSignOut}
               className="inline-flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 rounded-lg border border-gray-300 transition-colors duration-200 ml-2"
