@@ -44,13 +44,13 @@ const AppContent: React.FC<{
           // ) : (
           //   <PublicHomePage onLoginClick={() => setShowAuthPage(true)} />
           // )
-          <PublicHomePage onLoginClick={() => navigate('/auth')} />
+          <PublicHomePage onLoginClick={() => navigate('/home')} />
         } />
         {/* <Route path="/auth/*" element={<Auth onAuthenticate={() => setIsAuthenticated(true)} />} /> */}
-        <Route path="/auth/*" element={<Auth onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />}>
+        {/* <Route path="/auth/*" element={<Auth onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />}>
           <Route index element={<LoginPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
           <Route path="signup" element={<SignupPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
-        </Route>
+        </Route> */}
         <Route path="/home" element={<LandingPage handleSignOut={handleSignOut} />} />
         <Route path="/add-expense" element={<AddExpense onClose={() => navigate('/home')} />} />
         <Route path="groups" element={<GroupsPage />} />
