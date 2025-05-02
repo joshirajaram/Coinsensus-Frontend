@@ -10,6 +10,7 @@ import HomePage from 'pages/HomePage';
 import PublicHomePage from 'pages/PublicHomePage';
 import SignupPage from './pages/Signup';
 import LoginPage from './pages/Login';
+import LandingPage from 'pages/LandingPage';
 
 // Create a wrapper component to use navigation
 const AppContent: React.FC<{
@@ -50,7 +51,7 @@ const AppContent: React.FC<{
           <Route index element={<LoginPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
           <Route path="signup" element={<SignupPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
         </Route>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/home" element={<LandingPage handleSignOut={handleSignOut} />} />
         <Route path="/add-expense" element={<AddExpense onClose={() => navigate('/home')} />} />
         <Route path="groups" element={<GroupsPage />} />
         <Route path="friends" element={<FriendsPage />} />
