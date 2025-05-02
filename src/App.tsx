@@ -43,20 +43,20 @@ const AppContent: React.FC<{
           // ) : (
           //   <PublicHomePage onLoginClick={() => setShowAuthPage(true)} />
           // )
-          <PublicHomePage onLoginClick={() => navigate('/auth')}/>
+          <PublicHomePage onLoginClick={() => navigate('/auth')} />
         } />
-          {/* <Route path="/auth/*" element={<Auth onAuthenticate={() => setIsAuthenticated(true)} />} /> */}
-          <Route path="/auth/*" element={<Auth onAuthenticate={() => setIsAuthenticated(true)} />}>
-            <Route index element={<LoginPage onAuthenticate={() => setIsAuthenticated(true)} />} />
-            <Route path="signup" element={<SignupPage onAuthenticate={() => setIsAuthenticated(true)} />} />
-          </Route>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/add-expense" element={<AddExpense onClose={() => navigate('/')} />} />
-          <Route path="groups" element={<GroupsPage />} />
-          <Route path="friends" element={<FriendsPage />} />
-          <Route path="activity" element={<ActivityPage />} />
-          <Route path="account" element={<AccountPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="/auth/*" element={<Auth onAuthenticate={() => setIsAuthenticated(true)} />} /> */}
+        <Route path="/auth/*" element={<Auth onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />}>
+          <Route index element={<LoginPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
+          <Route path="signup" element={<SignupPage onAuthenticate={() => {setIsAuthenticated(true);navigate('/home');}} />} />
+        </Route>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/add-expense" element={<AddExpense onClose={() => navigate('/home')} />} />
+        <Route path="groups" element={<GroupsPage />} />
+        <Route path="friends" element={<FriendsPage />} />
+        <Route path="activity" element={<ActivityPage />} />
+        <Route path="account" element={<AccountPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
         {/* </Route> */}
       </Routes>
     </>
