@@ -9,15 +9,28 @@ import {
   TrendingUp,
   Menu,
   X,
+  CreditCard,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import NavItem from '../components/NavItem';
 import AddExpense from '../components/AddExpense'; // Import the AddExpense component
-import { Outlet, useLocation        } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import DollarIcon from '../assets/images/dollar.png';
 import { useNavigate } from 'react-router-dom';
+import StatCard from 'components/StatCard';
+import './HomePage.css';
+import ActivityItem from 'components/ActivityItem';
 
+interface Activity {
+  id: number;
+  title: string;
+  amount: number;
+  group: string;
+  time: string;
+  description: string;
+  users: string; // Changed to string to match ActivityItem props
+}
 
 interface LandingPageProps {
   handleSignOut: () => void;
@@ -31,7 +44,7 @@ interface BalanceResponse {
 }
 
 
-const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
+const LandingPage: React.FC<LandingPageProps> = ({ handleSignOut }) => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -41,6 +54,8 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
   const [balances, setBalances] = useState<Array<{ name: string; amount: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [shouldRefreshBalances, setShouldRefreshBalances] = useState(false);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [activities, setActivities] = useState<Activity[]>([]);
 
   const handleSignIn = () => {
     navigate('/add-expense');
@@ -80,7 +95,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       try {
         const username = localStorage.getItem('username');
         const amount = Math.abs(selectedUser.amount); // Use absolute value for the API
-  
+
         // Determine who pays whom based on amount sign
         const transactionData = {
           method: "add_expense",
@@ -90,9 +105,9 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
           amount: amount,
           description: "settled up"
         };
-  
+
         console.log("Settlement transaction data:", transactionData); // Debug log
-  
+
         const response = await fetch(`${baseUrl}/api/transactions/createTransaction`, {
           method: 'POST',
           headers: {
@@ -100,11 +115,11 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
           },
           body: JSON.stringify(transactionData)
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to create settlement transaction');
         }
-  
+
         // If successful, update the UI
         setBalances((prevBalances) =>
           prevBalances.filter((balance) => balance.name !== selectedUser.name)
@@ -112,12 +127,12 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
         setSelectedUser(null); // Close the confirmation dialog
         setShouldRefreshBalances(true); // Refresh balances after settlement
         setIsSettleTransactionsOpen(false); // Close the settle transactions modal
-  
+
         // Dispatch event to update balances
         window.dispatchEvent(new Event('settlementConfirm'));
         // Optional: Show success message
         // alert('Settlement transaction completed successfully!');
-  
+
       } catch (error) {
         console.error('Error creating settlement transaction:', error);
         alert('Failed to create settlement transaction. Please try again.');
@@ -127,45 +142,60 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
 
   const fetchBalances = async () => {
     const username = localStorage.getItem('username');
-    console.log("Fetching balances for username:", username);
+    console.log("Username", username);
+    if (!username) return;
 
     try {
       setIsLoading(true);
       const response = await fetch(
         `${baseUrl}/api/transactions/getBalances?username=${username}`,
         {
-          method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         }
       );
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch balances');
-      }
+      if (!response.ok) throw new Error('Failed to fetch balances');
 
-      const data = await response.json();
-      console.log("API Response data:", data);
-
-      const balancesArray = Object.entries(data.balances).map(([name, amount]) => ({
+      const data: BalanceResponse = await response.json();
+      const balanceArray = Object.entries(data.balances).map(([name, amount]) => ({
         name,
-        amount: Number(amount),
+        amount,
       }));
+      setBalances(balanceArray);
 
-      setBalances(balancesArray);
-    } catch (error) {
-      console.error('Error fetching balances:', error);
+      // Calculate total balance
+      const total = Object.values(data.balances).reduce((sum, amt) => sum + amt, 0);
+      console.log("The value of balance is : ", total);
+      setTotalBalance(total);
+
+    } catch (err) {
+      console.error('Error fetching balances:', err);
     } finally {
       setIsLoading(false);
-      setShouldRefreshBalances(false);
     }
   };
+
 
   // Initial fetch on mount
   useEffect(() => {
     fetchBalances();
   }, []); // Empty dependency array for initial load
+
+  useEffect(() => {
+    const handleExpenseAdded = () => fetchBalances();
+    window.addEventListener('expenseAdded', handleExpenseAdded);
+    window.addEventListener('settlementConfirm', handleExpenseAdded);
+    return () => {
+      window.removeEventListener('expenseAdded', handleExpenseAdded);
+      window.removeEventListener('settlementConfirm', handleExpenseAdded);
+    };
+  }, []);
+
+  const handleGetStartedClick = () => {
+    navigate('/add-expense');
+  }
 
   // Refresh balances when shouldRefreshBalances changes
   useEffect(() => {
@@ -173,6 +203,9 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       fetchBalances();
     }
   }, [shouldRefreshBalances]);
+  useEffect(() => {
+    console.log("totalBalance : ", totalBalance); // Log to check if totalBalance is being set correctly
+  }, [totalBalance]);
 
   // Modify closeAddExpenseModal to trigger balance refresh
   const closeAddExpenseModal = () => {
@@ -187,12 +220,12 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       <div className="lg:hidden flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center space-x-3">
           <div className="h-8 w-8 flex items-center justify-center">
-          <img
-            src={DollarIcon} // Replace with the actual path to your favicon
-            alt="Logo"
-            className="h-full w-full object-contain"
-          />
-        </div>
+            <img
+              src={DollarIcon} // Replace with the actual path to your favicon
+              alt="Logo"
+              className="h-full w-full object-contain"
+            />
+          </div>
 
           <Link to="/">
             <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
@@ -223,20 +256,20 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
       `}
       >
         <div className="hidden lg:flex items-center mb-12">
-        <div className="h-10 w-10 flex items-center justify-center">
-        <img
-          src={DollarIcon}
-          alt="Logo"
-          className="h-full w-full object-contain"
-        />
-      </div>
+          <div className="h-10 w-10 flex items-center justify-center">
+            <img
+              src={DollarIcon}
+              alt="Logo"
+              className="h-full w-full object-contain"
+            />
+          </div>
 
           {isExpanded && (
             <Link to="/">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              &nbsp; Coinsensus
-            </h1>
-          </Link>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                &nbsp; Coinsensus
+              </h1>
+            </Link>
           )}
         </div>
 
@@ -276,7 +309,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="hidden lg:block absolute -right-0  top-1/3 bg-white rounded-full p-2.5 shadow-lg hover:shadow-xl transition-shadow"
-        > 
+        >
           <div className="h-4 w-4 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" />
         </button>
       </nav>
@@ -288,8 +321,8 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800">{getPageTitle()}</h2>
             {/* <p className="text-gray-500 mt-1">Welcome back!</p> */}
             <p className="text-gray-500 mt-1">
-            Welcome back{localStorage.getItem('username') ? `, ${localStorage.getItem('username')}!` : '!'}
-</p>
+              Welcome back{localStorage.getItem('username') ? `, ${localStorage.getItem('username')}!` : '!'}
+            </p>
 
           </div>
           <div className="flex items-center space-x-4">
@@ -323,6 +356,62 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
             </button>
           </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+          {!isLoading && (
+            <>
+              {totalBalance > 0 ? (
+                <StatCard
+                  icon={<TrendingUp size={20} />}
+                  title="You are owed"
+                  amount={`$${Math.abs(totalBalance).toFixed(2)}`}
+                  trend="up"
+                  trendValue="12.5%"
+                />
+              ) : totalBalance < 0 ? (
+                <StatCard
+                  icon={<CreditCard size={20} />}
+                  title="You owe"
+                  amount={`$${Math.abs(totalBalance).toFixed(2)}`}
+                  trend="down"
+                  trendValue="5.2%"
+                />
+              ) : (
+                <StatCard
+                  icon={<TrendingUp size={20} />}
+                  title="Balance"
+                  amount="You're all settled up!"
+                  trend="neutral"
+                  trendValue="0%"
+                />
+              )}
+            </>
+          )}
+        </div>
+        <div className="flex-1 p-6 lg:ml-49 mt-16 lg:mt-0"> {/* Added margin-top for fixed navbar */}
+          <h2 className="text-2xl font-bold mb-4">Check out your recent activity below!</h2>
+          <div className="grid grid-cols-1 gap-4 lg:gap-6">
+            <div className="lg:col-span-3 bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
+              {activities.length > 0 ? (
+                <div className="space-y-4">
+                  {activities.map((activity) => (
+                    <ActivityItem
+                      key={activity.id}
+                      title={activity.title}
+                      amount={activity.amount}
+                      group={activity.group}
+                      time={activity.time}
+                      description={activity.description}
+                      users={activity.users} // Now passing string instead of number
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-gray-500">No recent activities</p>
+              )}
+            </div>
+          </div>
+        </div>
         <Outlet />
       </main>
 
@@ -337,36 +426,35 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
 
       {/* Settle Transactions Modal */}
       {isSettleTransactionsOpen && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-        <div className="bg-white rounded-xl p-8 w-96">
-          <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
-          {nonZeroBalances.length > 0 ? (
-            <ul className="space-y-4">
-              {nonZeroBalances.map((balance) => (
-                <li
-                  key={balance.name}
-                  className={`flex justify-between p-2 rounded-lg cursor-pointer ${
-                    balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}
-                  onClick={() => setSelectedUser(balance)}
-                >
-                  <span>{balance.name}</span>
-                  <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-center text-gray-500">Nothing to settle</p>
-          )}
-          <button
-            onClick={closeSettleTransactionsModal}
-            className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-          >
-            Close
-          </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-8 w-96">
+            <h3 className="text-xl font-bold mb-4">Settle Transactions</h3>
+            {nonZeroBalances.length > 0 ? (
+              <ul className="space-y-4">
+                {nonZeroBalances.map((balance) => (
+                  <li
+                    key={balance.name}
+                    className={`flex justify-between p-2 rounded-lg cursor-pointer ${balance.amount > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                    onClick={() => setSelectedUser(balance)}
+                  >
+                    <span>{balance.name}</span>
+                    <span>{balance.amount > 0 ? `+${balance.amount}` : balance.amount}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-gray-500">Nothing to settle</p>
+            )}
+            <button
+              onClick={closeSettleTransactionsModal}
+              className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            >
+              Close
+            </button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
       {/* Confirm Settlement Dialog */}
       {selectedUser && (

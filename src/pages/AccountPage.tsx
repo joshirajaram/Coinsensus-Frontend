@@ -63,7 +63,7 @@ const AccountPage: React.FC = () => {
           <NavItem
             icon={<Home size={20} />}
             label="Home"
-            path="/"
+            path="/home"
             isExpanded={isExpanded}
           />
           {/* //TODO */}
