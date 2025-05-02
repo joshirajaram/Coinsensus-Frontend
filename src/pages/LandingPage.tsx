@@ -55,7 +55,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
 
   const getPageTitle = () => {
     switch (location.pathname) {
-      case '/':
+      case '/home':
         return 'Dashboard';
       case '/groups':
         return 'Groups';
@@ -244,7 +244,7 @@ const LandingPage: React.FC <LandingPageProps>= ({handleSignOut}) => {
           <NavItem
             icon={<Home size={20} />}
             label="Home"
-            path="/"
+            path="/home"
             isExpanded={isExpanded}
           />
           {/* //TODO */}
